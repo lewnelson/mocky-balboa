@@ -7,15 +7,13 @@ import {
 import {
   clientIdentityStorage,
   startServer,
-  type ServerOptions,
-} from "@mocky-balboa/server";
-import {
   ClientIdentityStorageHeader,
   UnsetClientIdentity,
-} from "@mocky-balboa/shared-config";
+  type ServerOptions,
+} from "@mocky-balboa/server";
 
 /** Next.js relevant create server options */
-interface NextServerOptions<TWithConfig extends boolean = false> {
+export interface NextServerOptions<TWithConfig extends boolean = false> {
   /**
    * Whether to use a custom server
    * @ignore
@@ -58,7 +56,7 @@ interface NextServerOptions<TWithConfig extends boolean = false> {
  * @property hostname - Host to bind Next.js server to {@link NextServerOptions.hostname}
  * @interface
  */
-type NextOptions = Pick<NextServerOptions, "dev" | "port" | "hostname">;
+export type NextOptions = Pick<NextServerOptions, "dev" | "port" | "hostname">;
 
 /**
  * Non-nullable {@link NextOptions}
@@ -85,7 +83,7 @@ export type RequestHandler = (
 /**
  * Definition for output of {@link CreateNextServer}
  */
-interface NextWrapperServer {
+export interface NextWrapperServer {
   getRequestHandler(): RequestHandler;
   prepare(): Promise<void>;
 }

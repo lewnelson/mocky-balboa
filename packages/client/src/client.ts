@@ -2,6 +2,7 @@ import {
   Message,
   MessageType,
   parseMessage,
+  type MessageTypes,
   type ParsedMessage,
   type ParsedMessageType,
 } from "@mocky-balboa/websocket-messages";
@@ -13,7 +14,10 @@ import { Route, type RouteResponse } from "./route.js";
 import { DefaultWebSocketServerPort } from "@mocky-balboa/shared-config";
 
 /** Default timeout duration in milliseconds for establishing an identified connection with the WebSocket server */
-const DefaultWebSocketServerTimeout = 5000;
+export const DefaultWebSocketServerTimeout = 5000;
+
+/** Default timeout duration in milliseconds for waiting on a request to be sent */
+const DefaultWaitForRequestTimeout = 5000;
 
 /** Possible values for URL pattern matching */
 export type UrlMatcher =
@@ -35,6 +39,15 @@ export interface RouteOptions {
 type RouteMeta = RouteOptions & {
   calls: number;
 };
+
+export interface WaitForRequestOptions {
+  /**
+   * Timeout duration in milliseconds for waiting for a request to be received from the WebSocket server
+   *
+   * @default {@link DefaultWaitForRequestTimeout}
+   */
+  timeout?: number;
+}
 
 /**
  * Connection options for the WebSocket server client connection
@@ -166,20 +179,12 @@ export class Client {
   }
 
   /**
-   * Callback handler when a request message is received from the WebSocket server. This method is responsible for finding the appropriate route handlers, executing them, and sending the response back to the WebSocket server.
-   *
-   * @param message - The received request message.
+   * Builds a Request instance from a parsed request message.
    */
-  private async onRequest(
-    message: ParsedMessageType<typeof MessageType.REQUEST>,
+  private getRequestObjectFromRequestMessage(
+    message: ParsedMessageType<MessageTypes["REQUEST"]>,
   ) {
-    if (!this._ws) {
-      throw new Error("WebSocket is not connected");
-    }
-
-    const { request, id } = message.payload;
-    const url = new URL(request.url);
-
+    const { request } = message.payload;
     let requestInit: RequestInit;
     if (request.method === "GET" || request.method === "HEAD") {
       requestInit = {
@@ -195,7 +200,59 @@ export class Client {
       };
     }
 
-    const requestObject = new Request(url, requestInit);
+    return new Request(request.url, requestInit);
+  }
+
+  /**
+   * Waits for a request to be made that matches the given URL matcher.
+   *
+   * @param urlMatcher - The URL matcher to match against.
+   * @param options - Options for the wait operation.
+   * @returns Promise resolving to an instance of Request matching the original request dispatched by the server, rejects with an error if the request is not found within the specified timeout duration.
+   */
+  async waitForRequest(
+    urlMatcher: UrlMatcher,
+    {
+      timeout: timeoutDuration = DefaultWaitForRequestTimeout,
+    }: WaitForRequestOptions = {},
+  ): Promise<Request> {
+    return new Promise<Request>((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        reject(new Error("Timed out waiting for request"));
+      }, timeoutDuration);
+
+      const onRequest = async (
+        message: ParsedMessageType<MessageTypes["REQUEST"]>,
+      ) => {
+        const urlMatch = await this.doesUrlMatch(
+          urlMatcher,
+          new URL(message.payload.request.url),
+        );
+        if (urlMatch) {
+          this.off(MessageType.REQUEST, onRequest);
+          clearTimeout(timeout);
+          resolve(this.getRequestObjectFromRequestMessage(message));
+        }
+      };
+
+      this.on(MessageType.REQUEST, onRequest);
+    });
+  }
+
+  /**
+   * Callback handler when a request message is received from the WebSocket server. This method is responsible for finding the appropriate route handlers, executing them, and sending the response back to the WebSocket server.
+   *
+   * @param message - The received request message.
+   */
+  private async onRequest(message: ParsedMessageType<MessageTypes["REQUEST"]>) {
+    if (!this._ws) {
+      throw new Error("WebSocket is not connected");
+    }
+
+    const { request, id } = message.payload;
+    const url = new URL(request.url);
+
+    const requestObject = this.getRequestObjectFromRequestMessage(message);
     const route = new Route(requestObject);
 
     // Iterate over all the route handlers sequentially. This ensures the
@@ -266,6 +323,8 @@ export class Client {
 
   /**
    * Used to connect the client to the WebSocket server. This will also identify the client on the server to enable concurrency for mocking. You need to call this method before you can register any route handlers.
+   *
+   * @param options - Options for the connection.
    */
   async connect({
     port = DefaultWebSocketServerPort,
@@ -403,3 +462,10 @@ export type {
   FulfillRouteResponse,
   RouteResponse,
 } from "./route.js";
+export { ClientIdentityStorageHeader } from "@mocky-balboa/shared-config";
+export {
+  MessageType,
+  type MessageTypes,
+  type ParsedMessage,
+  type ParsedMessageType,
+} from "@mocky-balboa/websocket-messages";

@@ -45,7 +45,7 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            "https://github.com/mockybalboa/mockybalboa/tree/main/sites/docs.mockybalboa/",
+            "https://github.com/mockybalboa/mockybalboa/blob/main/sites/docs.mockybalboa/",
         },
         theme: {
           customCss: "./src/css/custom.css",
@@ -54,9 +54,9 @@ const config: Config = {
     ],
   ],
 
+  plugins: [require.resolve("docusaurus-lunr-search")],
+
   themeConfig: {
-    // Replace with your project's social card
-    image: "img/docusaurus-social-card.jpg",
     navbar: {
       title: "Mocky Balboa",
       logo: {
@@ -66,7 +66,7 @@ const config: Config = {
       items: [
         {
           type: "docSidebar",
-          sidebarId: "tutorialSidebar",
+          sidebarId: "docsSidebar",
           position: "left",
           label: "Docs",
         },

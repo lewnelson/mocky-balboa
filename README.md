@@ -4,8 +4,7 @@ A server-side network mocking library for your SSR applications. Fixture http ne
 
 ## Getting started
 
-TODO
-Check out the [documentation]() to get started.
+Check out the [documentation](https://docs.mockybalboa.com) to get started.
 
 ## 🚧 Integrations roadmap
 

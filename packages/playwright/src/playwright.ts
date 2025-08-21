@@ -1,10 +1,11 @@
-import { Client, type ConnectOptions } from "@mocky-balboa/client";
-import { ClientIdentityStorageHeader } from "@mocky-balboa/shared-config";
 import {
+  Client,
   MessageType,
+  type ConnectOptions,
+  ClientIdentityStorageHeader,
   type MessageTypes,
   type ParsedMessageType,
-} from "@mocky-balboa/websocket-messages";
+} from "@mocky-balboa/client";
 import type { BrowserContext } from "@playwright/test";
 import { logger } from "./logger.js";
 

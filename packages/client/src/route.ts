@@ -159,6 +159,8 @@ export class Route {
    *   });
    * })
    * ```
+   *
+   * @param options - Options for the fulfillment.
    */
   fulfill({
     response: optionsResponse,
@@ -254,6 +256,9 @@ export class Route {
 
   /**
    * Utility method to help with modifying responses, intended to be used in conjunction with {@link Client.fetch} for modifying responses before sending them back to the server
+   *
+   * @param response - The response to modify.
+   * @param options - Options for the modification.
    */
   modifyResponse(
     response: Response,
@@ -292,6 +297,8 @@ export class Route {
    *   return route.fulfill({ response: modifiedResponse });
    * })
    * ```
+   *
+   * @param options - Options for the fetch operation.
    */
   async fetch({
     headers,

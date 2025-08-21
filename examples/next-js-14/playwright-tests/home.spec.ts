@@ -115,4 +115,13 @@ test.describe("when the data is loaded successfully", () => {
     await page.goto("http://localhost:3000");
     await expect(page.getByText("3 x 2 minute rounds")).toBeVisible();
   });
+
+  test("it loads the data for the next fight with the correct custom X-Public-Api-Key header value", async ({
+    page,
+  }) => {
+    const requestPromise = client.waitForRequest(nextFightEndpoint);
+    await page.goto("http://localhost:3000");
+    const request = await requestPromise;
+    expect(request.headers.get("X-Public-Api-Key")).toBe("public-api-key");
+  });
 });

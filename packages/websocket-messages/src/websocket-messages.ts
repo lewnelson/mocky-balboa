@@ -13,7 +13,7 @@ export const MessageType = {
 export type MessageTypes = typeof MessageType;
 export type MessageType = (typeof MessageType)[keyof typeof MessageType];
 
-const Messages = z.discriminatedUnion("type", [
+export const Messages = z.discriminatedUnion("type", [
   z.object({
     type: z.literal(MessageType.UNKNOWN),
     messageId: z.string(),

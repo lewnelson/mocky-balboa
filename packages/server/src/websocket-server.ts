@@ -11,7 +11,15 @@ import {
 } from "./connection-state.js";
 import { DefaultWebSocketServerPort } from "@mocky-balboa/shared-config";
 
+/**
+ * Options for the WebSocket server
+ */
 export interface WebSocketServerOptions {
+  /**
+   * WebSocket server port
+   *
+   * @default {@link DefaultWebSocketServerPort}
+   */
   port?: number;
 }
 

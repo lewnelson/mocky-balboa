@@ -129,6 +129,47 @@ Used to unregister all route handlers registered on the client.
 
 [Client.unrouteAll API reference](https://api-reference.mockybalboa.com/classes/_mocky-balboa_client.Client#unrouteAll)
 
+### Waiting for a request
+
+When you need to wait for a request to be made, you can use `client.waitForRequest`.
+
+:::tip
+
+Use `client.waitForRequest` to assert on the request being sent on the server.
+
+:::
+
+<Tabs groupId="javascript-language">
+  <TabItem value="typescript" label="TypeScript" default>
+    ```TypeScript
+    const requestPromise = client.waitForRequest();
+
+    // Run code that triggers the request, i.e. loading a page
+
+    // Await the request
+    const request = await requestPromise;
+
+    // Assert on the request
+    expect(request.headers.get("Authorization")).toBeDefined();
+    ```
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+    ```JavaScript
+    const requestPromise = client.waitForRequest();
+
+    // Run code that triggers the request, i.e. loading a page
+
+    // Await the request
+    const request = await requestPromise;
+
+    // Assert on the request
+    expect(request.headers.get("Authorization")).toBeDefined();
+    ```
+  </TabItem>
+</Tabs>
+
+[Client.waitForRequest API reference](https://api-reference.mockybalboa.com/classes/_mocky-balboa_client.Client#waitForRequest)
+
 ## Route
 
 For full usage, see [API reference](https://api-reference.mockybalboa.com/classes/_mocky-balboa_client.Route).

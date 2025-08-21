@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "description": "WebSocket message utils for Mocky Balboa.",
   "type": "module",
-  "homepage": "https://mockybalboa.com",
+  "homepage": "https://docs.mockybalboa.com",
+  "bugs": {
+    "url": "https://github.com/mocky-balboa/mocky-balboa/issues"
+  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mocky-balboa/monorepo.git",
+    "url": "git+https://github.com/mocky-balboa/mocky-balboa.git",
     "directory": "packages/client"
   },
   "keywords": [],

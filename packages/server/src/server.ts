@@ -20,6 +20,8 @@ export interface ServerOptions {
 
 /**
  * Starts the mock server and WebSocket server
+ *
+ * @param options - Options for the server.
  */
 export const startServer = async ({
   webSocketServerOptions = {},
@@ -31,3 +33,9 @@ export const startServer = async ({
 };
 
 export { clientIdentityStorage } from "./trace.js";
+export {
+  ClientIdentityStorageHeader,
+  UnsetClientIdentity,
+} from "@mocky-balboa/shared-config";
+export type { WebSocketServerOptions } from "./websocket-server.js";
+export type { MockServerOptions } from "./mock-server.js";

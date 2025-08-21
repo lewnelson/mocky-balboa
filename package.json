@@ -1,8 +1,11 @@
 {
-  "name": "@mocky-balboa/monorepo",
+  "name": "@mocky-balboa/mocky-balboa",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Knock out server-side test headaches",
+  "author": {
+    "name": "Lewis Nelson",
+    "url": "https://lewnelson.com"
+  },
   "scripts": {
     "build:packages": "pnpm --filter \"./packages/*\" build",
     "build:packages-watch": "pnpm --filter \"./packages/*\" --parallel build:watch",
@@ -10,7 +13,6 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
   "license": "MIT",
   "packageManager": "pnpm@10.14.0",
   "devDependencies": {

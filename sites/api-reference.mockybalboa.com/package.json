@@ -6,7 +6,7 @@
   "homepage": "https://api-reference.mockybalboa.com",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mocky-balboa/monorepo.git",
+    "url": "git+https://github.com/mocky-balboa/mocky-balboa.git",
     "directory": "sites/api-reference.mockybalboa"
   },
   "keywords": [],
