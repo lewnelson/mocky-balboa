@@ -1,0 +1,129 @@
+---
+sidebar_position: 1
+title: Next.js
+---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Mocky Balboa and Next.js
+
+How to use Mocky Balboa with Playwright.
+
+## Installation
+
+<Tabs groupId="package-manager">
+  <TabItem value="pnpm" label="pnpm" default>
+      ```bash
+      pnpm add -D @mocky-balboa/next-js
+      ```
+    </TabItem>
+  <TabItem value="npm" label="npm">
+    ```bash
+    npm install -D @mocky-balboa/next-js
+    ```
+  </TabItem>
+  <TabItem value="yarn" label="yarn">
+    ```bash
+    yarn add -D @mocky-balboa/next-js
+    ```
+  </TabItem>
+</Tabs>
+
+## Usage
+
+There are two ways to use Mocky Balboa with Next.js. Using the CLI or programmatically. The CLI is the recommended way to use Mocky Balboa with Next.js as it's easier to get started with.
+
+### Using the CLI
+
+<Tabs groupId="package-manager">
+  <TabItem value="pnpm" label="pnpm" default>
+      ```bash
+      pnpm mocky-balboa-next-js
+      ```
+    </TabItem>
+  <TabItem value="npm" label="npm">
+    ```bash
+    npm mocky-balboa-next-js
+    ```
+  </TabItem>
+  <TabItem value="yarn" label="yarn">
+    ```bash
+    yarn mocky-balboa-next-js
+    ```
+  </TabItem>
+</Tabs>
+
+The CLI tool will source your Next.js configuration file when you don't explicitly specify it with the `--conf` flag. Starting from the current working directory and traversing up until it finds a Next.js configuration file, it will look for the following files:
+
+- `next.config.js`
+- `next.config.mjs`
+- `next.config.ts`
+- `next.config.cjs`
+
+#### CLI options
+
+```bash
+  -p, --port [port]                 Port to run the server on (default: "3000")
+  --websocket-port [websocketPort]  Port to run the WebSocket server on (default:
+                                    "58152")
+  -h, --hostname [hostname]         Hostname to bind the server to (default:
+                                    "localhost")
+  -d, --dev                         Run the Next.js server in development mode (default:
+                                    false)
+  -t, --timeout [timeout]           Timeout in milliseconds for the mock server to
+                                    receive a response from the client (default: "5000")
+  --conf [conf]                     Relative or absolute path to the Next.js
+                                    configuration file. Include the file extension.
+                                    Defaults to discovering the path traversing up from
+                                    the current working directory.
+  --help                            display help for command
+```
+
+### Programmatically
+
+You might prefer to use the `startServers` function programmatically, especially if you have other customizations or configurations that you want to apply on the same server process.
+
+<Tabs groupId="javascript-language">
+  <TabItem value="typescript" label="TypeScript" default>
+        ```TypeScript
+        import { startServers } from "@mocky-balboa/next-js";
+        import next from "next";
+        import nextConfig from "../path/to/next.config.js";
+
+        const main = async () => {
+          await startServers(
+            (options) => {
+              return next({
+                ...options,
+                conf: nextConfig,
+              });
+            },
+          );
+        };
+
+        void main();
+        ```
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+      ```JavaScript
+      import { startServers } from "@mocky-balboa/next-js";
+      import next from "next";
+      import nextConfig from "../path/to/next.config.js";
+
+      const main = async () => {
+        await startServers(
+          (options) => {
+            return next({
+              ...options,
+              conf: nextConfig,
+            });
+          },
+        );
+      };
+
+      void main();
+      ```
+  </TabItem>
+</Tabs>
+
+See [startServers API reference](https://api-reference.mockybalboa.com/functions/_mocky-balboa_next-js.startServers) for full documentation on how to use `startServers`.

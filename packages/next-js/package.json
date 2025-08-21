@@ -1,0 +1,64 @@
+{
+  "name": "@mocky-balboa/next-js",
+  "version": "1.0.0",
+  "description": "Next.js integration for Mocky Balboa. Mock your server-side network requests in your test suites.",
+  "type": "module",
+  "homepage": "https://mockybalboa.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mocky-balboa/monorepo.git",
+    "directory": "packages/next-js"
+  },
+  "keywords": [
+    "next-js",
+    "next.js",
+    "nextjs",
+    "next",
+    "mocking",
+    "network",
+    "testing",
+    "tests",
+    "integration",
+    "server"
+  ],
+  "author": {
+    "name": "Lewis Nelson",
+    "url": "https://lewnelson.com"
+  },
+  "license": "MIT",
+  "packageManager": "pnpm@10.14.0",
+  "main": "./dist/cjs/next-js.js",
+  "bin": {
+    "mocky-balboa-next-js": "./dist/esm/cli.js"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/esm/next-js.js",
+      "require": "./dist/cjs/next-js.js"
+    }
+  },
+  "scripts": {
+    "build:esm": "tsc --project tsconfig.build.json",
+    "build:cjs": "tsc --project tsconfig.build.cjs.json",
+    "build": "pnpm clean && pnpm run build:esm && pnpm run build:cjs",
+    "build:watch": "concurrently \"pnpm build:esm --watch\" \"pnpm build:cjs --watch\"",
+    "clean": "rimraf dist",
+    "test": "echo \"No tests\""
+  },
+  "dependencies": {
+    "@mocky-balboa/server": "workspace:*",
+    "@mocky-balboa/shared-config": "workspace:*",
+    "commander": "^14.0.0",
+    "jiti": "^2.5.1"
+  },
+  "peerDependencies": {
+    "next": ">=14.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "concurrently": "catalog:",
+    "next": "^15.5.0",
+    "rimraf": "catalog:",
+    "typescript": "catalog:"
+  }
+}

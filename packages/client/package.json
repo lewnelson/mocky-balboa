@@ -1,0 +1,63 @@
+{
+  "name": "@mocky-balboa/client",
+  "version": "1.0.0",
+  "description": "Client library for Mocky Balboa to interact with the WebSocket server for real-time network mocking in your test suites.",
+  "type": "module",
+  "homepage": "https://mockybalboa.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mocky-balboa/monorepo.git",
+    "directory": "packages/client"
+  },
+  "keywords": [
+    "mocking",
+    "network",
+    "testing",
+    "tests",
+    "integration",
+    "server",
+    "client"
+  ],
+  "author": {
+    "name": "Lewis Nelson",
+    "url": "https://lewnelson.com"
+  },
+  "license": "MIT",
+  "packageManager": "pnpm@10.14.0",
+  "main": "./dist/cjs/client.js",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/client.js",
+      "require": "./dist/cjs/client.js"
+    }
+  },
+  "scripts": {
+    "build:esm": "tsc --project tsconfig.build.json",
+    "build:cjs": "tsc --project tsconfig.build.cjs.json",
+    "build": "pnpm clean && pnpm run build:esm && pnpm run build:cjs",
+    "build:watch": "concurrently \"pnpm run build:esm --watch\" \"pnpm run build:cjs --watch\"",
+    "clean": "rimraf dist",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@mocky-balboa/logger": "workspace:*",
+    "@mocky-balboa/shared-config": "workspace:*",
+    "@mocky-balboa/websocket-messages": "workspace:*",
+    "minimatch": "^10.0.3",
+    "pino": "catalog:",
+    "pino-pretty": "catalog:",
+    "uuid": "catalog:",
+    "ws": "catalog:"
+  },
+  "devDependencies": {
+    "@types/express": "catalog:",
+    "@types/node": "catalog:",
+    "@types/ws": "catalog:",
+    "concurrently": "catalog:",
+    "express": "catalog:",
+    "get-port": "catalog:",
+    "rimraf": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

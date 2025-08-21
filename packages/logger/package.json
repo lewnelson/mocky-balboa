@@ -1,0 +1,44 @@
+{
+  "name": "@mocky-balboa/logger",
+  "version": "1.0.0",
+  "description": "Logger library for Mocky Balboa, thin wrapper around Pino",
+  "type": "module",
+  "homepage": "https://mockybalboa.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mocky-balboa/monorepo.git",
+    "directory": "packages/logger"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Lewis Nelson",
+    "url": "https://lewnelson.com"
+  },
+  "license": "MIT",
+  "packageManager": "pnpm@10.14.0",
+  "main": "./dist/cjs/logger.js",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/logger.js",
+      "require": "./dist/cjs/logger.js"
+    }
+  },
+  "scripts": {
+    "build:esm": "tsc --project tsconfig.build.json",
+    "build:cjs": "tsc --project tsconfig.build.cjs.json",
+    "build": "pnpm clean && pnpm run build:esm && pnpm run build:cjs",
+    "build:watch": "concurrently \"pnpm build:esm --watch\" \"pnpm build:cjs --watch\"",
+    "clean": "rimraf dist",
+    "test": "echo \"No tests\""
+  },
+  "dependencies": {
+    "pino": "catalog:",
+    "pino-pretty": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "concurrently": "catalog:",
+    "rimraf": "catalog:",
+    "typescript": "catalog:"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "entryPoints": ["../../packages/*"],
+  "name": "Mocky Balboa",
+  "readme": "./README.md",
+  "entryPointStrategy": "packages",
+  "includeVersion": true
+}

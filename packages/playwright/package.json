@@ -1,0 +1,60 @@
+{
+  "name": "@mocky-balboa/playwright",
+  "version": "1.0.0",
+  "description": "Playwright integration for Mocky Balboa. Mock your server-side network requests directly inside your Playwright tests.",
+  "type": "module",
+  "homepage": "https://mockybalboa.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mocky-balboa/monorepo.git",
+    "directory": "packages/playwright"
+  },
+  "keywords": [
+    "playwright",
+    "mocking",
+    "network",
+    "testing",
+    "tests",
+    "integration",
+    "server"
+  ],
+  "author": {
+    "name": "Lewis Nelson",
+    "url": "https://lewnelson.com"
+  },
+  "license": "MIT",
+  "packageManager": "pnpm@10.14.0",
+  "main": "./dist/cjs/playwright.js",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/playwright.js",
+      "require": "./dist/cjs/playwright.js"
+    }
+  },
+  "scripts": {
+    "build:esm": "tsc --project tsconfig.build.json",
+    "build:cjs": "tsc --project tsconfig.build.cjs.json",
+    "build": "pnpm clean && pnpm run build:esm && pnpm run build:cjs",
+    "build:watch": "concurrently \"pnpm run build:esm --watch\" \"pnpm run build:cjs --watch\"",
+    "clean": "rimraf dist",
+    "test": "echo \"No tests\""
+  },
+  "dependencies": {
+    "@mocky-balboa/client": "workspace:*",
+    "@mocky-balboa/logger": "workspace:*",
+    "@mocky-balboa/shared-config": "workspace:*",
+    "@mocky-balboa/websocket-messages": "workspace:*",
+    "pino": "catalog:",
+    "pino-pretty": "catalog:"
+  },
+  "peerDependencies": {
+    "@playwright/test": ">=1.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.54.2",
+    "@types/node": "catalog:",
+    "concurrently": "catalog:",
+    "rimraf": "catalog:",
+    "typescript": "catalog:"
+  }
+}

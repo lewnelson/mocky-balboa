@@ -1,0 +1,40 @@
+{
+  "name": "@mocky-balboa/shared-config",
+  "version": "1.0.0",
+  "description": "Shared configuration for Mocky Balboa packages.",
+  "type": "module",
+  "homepage": "https://mockybalboa.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mocky-balboa/monorepo.git",
+    "directory": "packages/client"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Lewis Nelson",
+    "url": "https://lewnelson.com"
+  },
+  "license": "MIT",
+  "packageManager": "pnpm@10.14.0",
+  "main": "./dist/cjs/shared-config.js",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/shared-config.js",
+      "require": "./dist/cjs/shared-config.js"
+    }
+  },
+  "scripts": {
+    "build:esm": "tsc --project tsconfig.build.json",
+    "build:cjs": "tsc --project tsconfig.build.cjs.json",
+    "build": "pnpm clean && pnpm run build:esm && pnpm run build:cjs",
+    "build:watch": "concurrently \"pnpm run build:esm --watch\" \"pnpm run build:cjs --watch\"",
+    "clean": "rimraf dist",
+    "test": "echo \"No tests\""
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "concurrently": "catalog:",
+    "rimraf": "catalog:",
+    "typescript": "catalog:"
+  }
+}
