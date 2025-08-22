@@ -103,7 +103,20 @@ jobs:
           # Check if the loop finished without success
           curl -f http://localhost:3000 > /dev/null || (echo "Server is not available after 20 seconds" && exit 1)
 
-      - name: Install Playwright Browsers
+      - name: Get installed Playwright version
+        id: playwright-version
+        run: echo "pnpm --filter \"./examples/${{ matrix.example }}\" exec playwright --version"
+
+      - uses: actions/cache@v3
+        id: playwright-cache
+        with:
+          path: "~/.cache/ms-playwright"
+          key: "${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}"
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
+      - name: Install Playwright's dependencies
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: pnpm --filter "./examples/${{ matrix.example }}" exec playwright install --with-deps
 
       - name: Run Tests for ${{ matrix.example }}
