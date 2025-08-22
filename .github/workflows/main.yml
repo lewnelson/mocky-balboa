@@ -73,10 +73,35 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup example
-        uses: ./.github/actions/setup-example
-        with:
-          example: ${{ matrix.example }}
+      - name: Setup monorepo
+        uses: ./.github/actions/setup-monorepo
+
+      - name: Build packages
+        shell: bash
+        run: pnpm build:packages
+
+      # Need to run "pnpm install" after build to link the CLI to .bin
+      - name: pnpm install
+        uses: ./.github/actions/pnpm-install
+
+      - name: Build example
+        shell: bash
+        run: pnpm --filter "./examples/${{ matrix.example }}" build
+
+      - name: Serve example
+        shell: bash
+        run: pnpm --filter "./examples/${{ matrix.example }}" start &
+
+      - name: Wait for server to be ready
+        run: |
+          for i in $(seq 1 20); do
+            curl -f http://localhost:8080 > /dev/null && break
+            echo "Waiting for server to be available..."
+            sleep 1
+          done
+
+          # Check if the loop finished without success
+          curl -f http://localhost:8080 > /dev/null || (echo "Server is not available after 20 seconds" && exit 1)
 
       - name: Install Playwright Browsers
         run: pnpm playwright install --with-deps
