@@ -51,16 +51,15 @@ jobs:
   find_examples:
     name: 🔎 Find examples
     runs-on: ubuntu-latest
+    outputs:
+      examples: ${{ steps.find-examples.outputs.examples }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Finds examples
-        run: |
-          DIRECTORIES=$(find ./examples -mindepth 1 -maxdepth 1 -type d -print | sed "s|./examples/||" | jq -R . | jq -s . | tr -d '\n')
-          echo "directories<<EOF" >> $GITHUB_OUTPUT
-          echo "$DIRECTORIES" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+        id: finds-examples
+        uses: ./.github/actions/find-examples
 
   examples_playwright_tests:
     name: 🎭 Run Playwright tests for examples
