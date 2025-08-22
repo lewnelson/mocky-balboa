@@ -48,6 +48,7 @@ export const waitForAck = (
   timeoutDuration: number,
 ) => {
   // a comment
+  // another comment
   return waitForMessage(
     ws,
     (message) => {
