@@ -70,6 +70,9 @@ jobs:
       matrix:
         example: ${{ fromJson(needs.find_examples.outputs.examples) }}
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
       - name: Setup example
         uses: ./.github/actions/setup-example
         with:
