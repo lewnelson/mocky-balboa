@@ -68,6 +68,12 @@ Utilise vitest for unit testing the packages and the examples to cover end-to-en
 
 ---
 
+## Release Process
+
+Releases are automatically handled by CI using [Semantic Release](https://github.com/semantic-release/semantic-release). Conventional commits are used to determine the release version as well as used to generate the changelog. Only changed packages are deployed, and all packages are deployed when the pnpm lockfile is updated. All packages are published to npm.
+
+---
+
 ## Licensing
 
 By contributing your code, you agree to license your contributions under the project's [license](LICENSE).
