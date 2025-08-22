@@ -104,7 +104,7 @@ jobs:
           curl -f http://localhost:3000 > /dev/null || (echo "Server is not available after 20 seconds" && exit 1)
 
       - name: Install Playwright Browsers
-        run: pnpm playwright install --with-deps
+        run: pnpm --filter "./examples/${{ matrix.example }}" exec playwright install --with-deps
 
       - name: Run Tests for ${{ matrix.example }}
         run: pnpm --filter "./examples/${{ matrix.example }}" test:playwright
