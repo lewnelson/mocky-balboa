@@ -90,7 +90,7 @@ jobs:
 
       - name: Serve example
         shell: bash
-        run: pnpm --filter "./examples/${{ matrix.example }}" start &
+        run: pnpm --filter "./examples/${{ matrix.example }}" start:tests &
 
       - name: Wait for server to be ready
         run: |
