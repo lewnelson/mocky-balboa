@@ -27,7 +27,7 @@ Check out the [documentation](https://docs.mockybalboa.com) to get started.
 
 ## Examples
 
-See [examples](examples/README.md) for more information.
+See [examples](examples) for more information.
 
 ## Contributing
 
