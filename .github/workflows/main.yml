@@ -95,13 +95,13 @@ jobs:
       - name: Wait for server to be ready
         run: |
           for i in $(seq 1 20); do
-            curl -f http://localhost:8080 > /dev/null && break
+            curl -f http://localhost:3000 > /dev/null && break
             echo "Waiting for server to be available..."
             sleep 1
           done
 
           # Check if the loop finished without success
-          curl -f http://localhost:8080 > /dev/null || (echo "Server is not available after 20 seconds" && exit 1)
+          curl -f http://localhost:3000 > /dev/null || (echo "Server is not available after 20 seconds" && exit 1)
 
       - name: Install Playwright Browsers
         run: pnpm playwright install --with-deps
