@@ -52,7 +52,7 @@ jobs:
     name: 🔎 Find examples
     runs-on: ubuntu-latest
     outputs:
-      examples: ${{ steps.find-examples.outputs.examples }}
+      examples: ${{ steps.finds-examples.outputs.examples }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
