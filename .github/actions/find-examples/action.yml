@@ -14,5 +14,7 @@ runs:
       id: get-examples
       run: |
         # Find all directories in the examples folder and format as JSON
-        DIRECTORIES=$(find ./examples -mindepth 1 -maxdepth 1 -type d -print | sed "s|./examples/||" | jq -R . | jq -s .)
+        find ./examples -mindepth 1 -maxdepth 1 -type d -print | sed "s|./examples/||" | jq -R . | jq -s . > matrix.json
+        DIRECTORIES=$(cat matrix.json)
+        rm ./matrix.json
         echo "directories=$DIRECTORIES" >> $GITHUB_OUTPUT
