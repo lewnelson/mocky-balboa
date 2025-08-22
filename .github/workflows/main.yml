@@ -152,11 +152,11 @@ jobs:
               - packages/*/tsconfig.*.json
 
       - name: Setup monorepo
-        if: steps.changed-packages.outputs.test_any_changed == 'true'
+        if: steps.changed-packages.outputs.lockfile_any_changed == 'true' || steps.changed-packages.outputs.packages_any_changed == 'true'
         uses: ./.github/actions/setup-monorepo
 
       - name: Build packages
-        if: steps.changed-packages.outputs.test_any_changed == 'true'
+        if: steps.changed-packages.outputs.lockfile_any_changed == 'true' || steps.changed-packages.outputs.packages_any_changed == 'true'
         run: pnpm build:packages
 
       - name: Release packages (all)
