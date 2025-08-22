@@ -32,6 +32,7 @@
     "build": "pnpm clean && pnpm run build:esm && pnpm run build:cjs",
     "build:watch": "concurrently \"pnpm run build:esm --watch\" \"pnpm run build:cjs --watch\"",
     "clean": "rimraf dist",
+    "release": "semantic-release",
     "test": "echo \"No tests\""
   },
   "dependencies": {

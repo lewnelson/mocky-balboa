@@ -2,7 +2,7 @@
 name: Feature Request ✨
 about: Propose a new feature or enhancement for the project.
 title: "[FEAT] <a brief, descriptive title>"
-labels: 'feature'
+labels: enhancement
 assignees: 'lewnelson'
 
 ---

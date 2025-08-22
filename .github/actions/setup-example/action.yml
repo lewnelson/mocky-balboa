@@ -1,0 +1,33 @@
+name: Setup example
+description: Sets up example in preparation for testing
+
+inputs:
+  example:
+    description: Name of the example directory
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout Repository
+      shell: bash
+      uses: actions/checkout@v4
+
+    - name: Setup monorepo
+      uses: ./.github/actions/setup-monorepo
+
+    - name: Build packages
+      shell: bash
+      run: pnpm build:packages
+
+    # Need to run "pnpm install" after build to link the CLI to .bin
+    - name: pnpm install
+      uses: ./.github/actions/pnpm-install
+
+    - name: Build example
+      shell: bash
+      run: pnpm --filter "./examples/${{ matrix.example }}" build
+
+    - name: Serve example
+      shell: bash
+      run: pnpm --filter "./examples/${{ matrix.example }}" start &

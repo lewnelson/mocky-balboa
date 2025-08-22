@@ -1,0 +1,146 @@
+name: Main workflow
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate_commits:
+    name: 📖 Validate commit messages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Conventional commit lint
+        uses: ahmadnassri/action-commit-lint@v2.1.17
+
+  lint:
+    name: 💅 Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup monorepo
+        uses: ./.github/actions/setup-monorepo
+
+      - name: Oxlint
+        run: pnpm lint
+
+  package_tests:
+    name: 🧪 Run package tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup monorepo
+        uses: ./.github/actions/setup-monorepo
+
+      - name: Build packages
+        run: pnpm build:packages
+
+      - name: Test Packages
+        run: pnpm test:packages
+
+  find_examples:
+    name: 🔎 Find examples
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Finds examples
+        uses: ./.github/actions/find-examples
+
+  examples_playwright_tests:
+    name: 🎭 Run Playwright tests for examples
+    runs-on: ubuntu-latest
+    needs: find_examples
+    strategy:
+      fail-fast: false
+      matrix:
+        example: ${{ fromJson(needs.find_examples.outputs.examples) }}
+    steps:
+      - name: Setup example
+        uses: ./.github/actions/setup-example
+        with:
+          example: ${{ matrix.example }}
+
+      - name: Install Playwright Browsers
+        run: pnpm playwright install --with-deps
+
+      - name: Run Tests for ${{ matrix.example }}
+        run: pnpm --filter "./examples/${{ matrix.example }}" test:playwright
+
+  deploy:
+    name: Release packages
+    runs-on: ubuntu-latest
+    needs:
+      - validate_commits
+      - lint
+      - package_tests
+      - examples_playwright_tests
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Find changed packages
+        id: changed-packages
+        uses: tj-actions/changed-files@v46.0.5
+        with:
+          base_sha: ${{ github.event_name == 'push' && github.event.before || '' }}
+          files_yaml: |
+            lockfile:
+              - './pnpm-lock.yaml'
+            packages:
+              - packages/*/src/**
+              - packages/*/tsconfig.json
+              - packages/*/tsconfig.*.json
+
+      - name: Setup monorepo
+        if: steps.changed-packages.outputs.test_any_changed == 'true'
+        uses: ./.github/actions/setup-monorepo
+
+      - name: Build packages
+        if: steps.changed-packages.outputs.test_any_changed == 'true'
+        run: pnpm build:packages
+
+      - name: Release packages (all)
+        # Release all packages if the lockfile has changed
+        if: steps.changed-packages.outputs.lockfile_any_changed == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          pnpm --filter "./packages/*" run release --dry-run
+
+      - name: Release packages (changed)
+        # Only release changed packages if the lockfile has not changed, but packages have changed
+        if: steps.changed-packages.outputs.lockfile_any_changed == 'false' && steps.changed-packages.outputs.packages_any_changed == 'true'
+        env:
+          CHANGED_FILES: ${{ steps.changed-packages.outputs.packages_all_changed_files }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          PACKAGES=$(echo "$CHANGED_FILES" | grep -oE "packages/[^/]+" | sed "s|packages/||" | sort -u)
+
+          # Initialize an empty string to hold the formatted filters
+          FILTERS=""
+
+          # Iterate over each package name and build the command string with correct quotes
+          if [ -n "$PACKAGES" ]; then
+            for package in $PACKAGES; do
+              FILTERS+=" --filter \"./packages/$package\""
+            done
+
+            # Run the release command with the correctly formatted filters
+            pnpm $FILTERS run release --dry-run
+          fi
