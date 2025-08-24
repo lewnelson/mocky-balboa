@@ -49,9 +49,7 @@ export const getTrainingRegime = async (): Promise<
   ApiResponse<TrainingRegime>
 > => {
   try {
-    const response = await fetch("https://mickeylovesyou.com/training-regime", {
-      cache: "no-store",
-    });
+    const response = await fetch("https://mickeylovesyou.com/training-regime");
     const data = await response.json();
     return [data, null];
   } catch (error) {
@@ -63,7 +61,6 @@ export const getTrainingRegime = async (): Promise<
 export const getNextFight = async (): Promise<ApiResponse<Fight>> => {
   try {
     const response = await fetch("https://mickeylovesyou.com/next-fight", {
-      cache: "no-store",
       headers: {
         "X-Public-Api-Key": "public-api-key",
       },

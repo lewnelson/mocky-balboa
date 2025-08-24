@@ -127,14 +127,12 @@ export const bindMockServiceWorker = ({
       }
 
       try {
-        console.log("Attempting to get response from client");
         const response = await getResponseFromClient(
           connectionState,
           req.requestId,
           req.request,
           timeout,
         );
-        console.log("Responsy", response);
         return response;
       } catch (error) {
         console.log("error retrieving response from client");

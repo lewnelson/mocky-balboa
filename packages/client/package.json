@@ -27,18 +27,30 @@
   },
   "license": "MIT",
   "packageManager": "pnpm@10.14.0",
-  "main": "./dist/cjs/client.js",
+  "main": "./dist/cjs/client.cjs",
+  "types": "./dist/cjs/client.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/esm/client.js",
-      "require": "./dist/cjs/client.js"
+      "import": {
+        "default": "./dist/esm/client.js",
+        "types": "./dist/esm/client.d.ts"
+      },
+      "require": {
+        "default": "./dist/cjs/client.cjs",
+        "types": "./dist/cjs/client.d.ts"
+      }
     }
   },
   "scripts": {
-    "build:esm": "tsc --project tsconfig.build.json",
-    "build:cjs": "tsc --project tsconfig.build.cjs.json",
-    "build": "pnpm clean && pnpm run build:esm && pnpm run build:cjs",
-    "build:watch": "concurrently \"pnpm run build:esm --watch\" \"pnpm run build:cjs --watch\"",
+    "build:esm": "swc src --out-dir dist/esm -C module.type=es6 --strip-leading-paths",
+    "build:cjs": "swc src --out-dir dist/cjs -C module.type=commonjs --strip-leading-paths --out-file-extension cjs",
+    "build:esm:types": "tsc --emitDeclarationOnly --project tsconfig.build.esm.json",
+    "build:cjs:types": "tsc --emitDeclarationOnly --project tsconfig.build.cjs.json",
+    "build": "pnpm clean && pnpm run build:esm && pnpm run build:cjs && pnpm run build:types && pnpm run post:build",
+    "build:types": "pnpm run build:esm:types && pnpm run build:cjs:types",
+    "build:watch": "concurrently \"pnpm run build:esm --watch\" \"pnpm run build:cjs --watch\" \"pnpm run build:esm:types --watch\" \"pnpm run build:cjs:types --watch\" \"pnpm run post:build:watch\"",
+    "post:build": "pnpm --workspace-root package-post-cjs-build $(pwd)",
+    "post:build:watch": "chokidar \"dist/cjs/**/*.cjs\" -c \"pnpm run post:build\"",
     "clean": "rimraf dist",
     "release": "semantic-release",
     "test": "vitest"
@@ -54,6 +66,9 @@
     "ws": "catalog:"
   },
   "devDependencies": {
+    "@swc/cli": "catalog:",
+    "@swc/core": "catalog:",
+    "chokidar-cli": "catalog:",
     "@types/express": "catalog:",
     "@types/node": "catalog:",
     "@types/ws": "catalog:",

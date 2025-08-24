@@ -21,6 +21,8 @@
     "@mocky-balboa/next-js": "workspace:*",
     "@playwright/test": "^1.54.2",
     "playwright": "^1.54.2",
+    "detect-port": "^2.1.0",
+    "get-port": "^7.1.0",
     "typescript": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "^18",

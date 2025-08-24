@@ -1,5 +1,8 @@
 import { test, expect } from "@playwright/test";
 import { createClient, Client } from "@mocky-balboa/playwright";
+import getPort from "get-port";
+import { detect } from "detect-port";
+import { ChildProcessWithoutNullStreams, spawn } from "node:child_process";
 import {
   Fight,
   FightStatus,
@@ -10,9 +13,60 @@ import {
 const nextFightEndpoint = "https://mickeylovesyou.com/next-fight";
 const trainingRegimeEndpoint = "https://mickeylovesyou.com/training-regime";
 
+const waitForPortToBeOccupied = async (port: number) => {
+  const waitFor = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
+  let ticks = 0;
+  while (ticks < 10) {
+    await waitFor(1000);
+    const realPort = await detect(port);
+    console.log({ realPort, port });
+    if (realPort !== port) {
+      return;
+    }
+    ticks++;
+  }
+
+  throw new Error(`Timed out waiting for port ${port} to be occupied`);
+};
+
 let client: Client;
+let applicationPort: number;
+let serverProcess: ChildProcessWithoutNullStreams;
 test.beforeEach(async ({ context }) => {
-  client = await createClient(context);
+  applicationPort = await getPort();
+  const websocketServerPort = await getPort();
+  console.log(
+    `Starting server on port ${applicationPort} and websocket port ${websocketServerPort}`,
+  );
+  serverProcess = spawn("pnpm", [
+    "mocky-balboa-next-js",
+    "--port",
+    applicationPort.toString(),
+    "--websocket-port",
+    websocketServerPort.toString(),
+  ]);
+
+  serverProcess.stdout.on("data", (data) => {
+    console.log(data.toString());
+  });
+
+  serverProcess.stdout.on("error", (data) => {
+    console.error(data.toString());
+  });
+
+  await Promise.all([
+    waitForPortToBeOccupied(applicationPort),
+    waitForPortToBeOccupied(websocketServerPort),
+  ]);
+
+  client = await createClient(context, {
+    port: websocketServerPort,
+  });
+});
+
+test.afterEach(async () => {
+  serverProcess.kill();
 });
 
 const nextFight: Fight = {
@@ -62,7 +116,7 @@ test("when there's a network error loading the next fight data", async ({
     });
   });
 
-  await page.goto("http://localhost:3000");
+  await page.goto(`http://localhost:${applicationPort}`);
   await expect(page.getByText("Failed to load next fight data")).toBeVisible();
 });
 
@@ -81,7 +135,7 @@ test("when there's a network error loading the training regime data", async ({
     return route.error();
   });
 
-  await page.goto("http://localhost:3000");
+  await page.goto(`http://localhost:${applicationPort}`);
   await expect(
     page.getByText("Failed to load training log data"),
   ).toBeVisible();
@@ -107,12 +161,12 @@ test.describe("when the data is loaded successfully", () => {
   });
 
   test("it shows the stats for the next fight", async ({ page }) => {
-    await page.goto("http://localhost:3000");
+    await page.goto(`http://localhost:${applicationPort}`);
     await expect(page.getByText("Apollo Creed")).toBeVisible();
   });
 
   test("it shows the stats for the training regime", async ({ page }) => {
-    await page.goto("http://localhost:3000");
+    await page.goto(`http://localhost:${applicationPort}`);
     await expect(page.getByText("3 x 2 minute rounds")).toBeVisible();
   });
 
@@ -120,7 +174,7 @@ test.describe("when the data is loaded successfully", () => {
     page,
   }) => {
     const requestPromise = client.waitForRequest(nextFightEndpoint);
-    await page.goto("http://localhost:3000");
+    await page.goto(`http://localhost:${applicationPort}`);
     const request = await requestPromise;
     expect(request.headers.get("X-Public-Api-Key")).toBe("public-api-key");
   });

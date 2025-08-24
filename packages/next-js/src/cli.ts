@@ -89,13 +89,17 @@ const main = async () => {
   >("next", {
     parentURL: `file://${nextConfigPath}`,
   });
-  const nextConfig = await jiti.import(nextConfigPath);
+  const nextConfig = await jiti.import<
+    { default: Record<string, unknown> } | Record<string, unknown>
+  >(nextConfigPath);
 
   await startServers(
     (options) => {
       return ("default" in next ? next.default : next)({
         ...options,
-        conf: nextConfig,
+        conf: {
+          ...(nextConfig.default || nextConfig),
+        },
       });
     },
     {
