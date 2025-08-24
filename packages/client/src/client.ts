@@ -68,6 +68,19 @@ export interface ConnectOptions {
 }
 
 /**
+ * Data related to the mocked response
+ */
+export interface ResponseData {
+  response?: Response;
+  /** @default false */
+  error?: boolean;
+  /**
+   * The file path if any to load the response body from
+   */
+  path?: string | undefined;
+}
+
+/**
  * Client used to interface with the WebSocket server for mocking server-side network requests.
  *
  * @hideconstructor
@@ -157,10 +170,9 @@ export class Client {
   private async respondWithResponse(
     ws: WebSocket,
     requestId: string,
-    response?: Response,
-    /** @default false */
-    error?: boolean,
+    responseData: ResponseData = {},
   ) {
+    const { response, error, path } = responseData;
     const message = new Message(MessageType.RESPONSE, {
       id: requestId,
       error,
@@ -169,6 +181,7 @@ export class Client {
             status: response.status,
             headers: Object.fromEntries(response.headers),
             body: await response.text(),
+            path,
           }
         : undefined,
     });
@@ -270,7 +283,7 @@ export class Client {
       switch (routeResponse.type) {
         // Finite result. Terminates the route with a simulated network error.
         case "error":
-          await this.respondWithResponse(this._ws, id, undefined, true);
+          await this.respondWithResponse(this._ws, id, { error: true });
           responded = true;
           break;
         // Finite result. Terminates the route telling the server to execute the request without mocking.
@@ -280,7 +293,10 @@ export class Client {
           break;
         // Finite result. Terminates the route, passing the response to the server.
         case "fulfill":
-          await this.respondWithResponse(this._ws, id, routeResponse.response);
+          await this.respondWithResponse(this._ws, id, {
+            response: routeResponse.response,
+            path: routeResponse.path,
+          });
           responded = true;
           break;
       }

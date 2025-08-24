@@ -328,6 +328,34 @@ Useful when you want to fixture the response with mock data. This allows you to 
   </TabItem>
 </Tabs>
 
+You can also fulfill the response with a file. Any file type is supported, allowing you to mock binary data. The content-type header (if not explicitly set) will be derived from the file extension using the [mime-types](https://www.npmjs.com/package/mime-types) package.
+
+:::tip
+
+Make sure to use absolute paths for the file path using the [path](https://nodejs.org/api/path.html) module.
+
+:::
+
+<Tabs groupId="javascript-language">
+  <TabItem value="typescript" label="TypeScript" default>
+      ```TypeScript
+      client.route("**/api", (route) => {
+        return route.fulfill({
+          path: "/path/to/file.json",
+        });
+      });
+      ```
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+      ```JavaScript
+      client.route("**/api", (route) => {
+        return route.fulfill({
+          path: "/path/to/file.json",
+        });
+      });
+      ```
+  </TabItem>
+</Tabs>
 
 [Route.fetch API reference](https://api-reference.mockybalboa.com/classes/_mocky-balboa_client.Route#fetch).
 

@@ -269,6 +269,49 @@ describe("Client", () => {
       });
     });
 
+    test("when a route is fulfilled with a path to a file, the path is passed to the server", async () => {
+      client.route(
+        (_requestUrl: URL) => {
+          return true;
+        },
+        (route) => {
+          return route.fulfill({
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+            path: "/path/to/file.json",
+          });
+        },
+      );
+
+      const requestMessage = new Message(MessageType.REQUEST, {
+        id: "request-id",
+        request: {
+          method: "GET",
+          url: "http://example.com/another-endpoint",
+          headers: { Accept: "application/json" },
+        },
+      });
+
+      const idlePromise = waitForAckIdle(serverWs);
+      // Send the request to the client
+      serverWs.send(requestMessage.toString());
+      await idlePromise;
+
+      expect(mockResponseRegister).toHaveBeenCalledWith({
+        type: MessageType.RESPONSE,
+        messageId: expect.any(String),
+        payload: {
+          id: "request-id",
+          response: {
+            status: 200,
+            headers: { "content-type": "application/json" },
+            body: "",
+            path: "/path/to/file.json",
+          },
+        },
+      });
+    });
+
     test("when a route matches multiple handlers, they are executed in the order they were registered", async () => {
       const spies = [vi.fn(), vi.fn(), vi.fn(), vi.fn()] as const;
 

@@ -55,6 +55,7 @@ export const Messages = z.discriminatedUnion("type", [
           status: z.number(),
           headers: z.record(z.string(), z.string()),
           body: z.string().optional(),
+          path: z.string().optional(),
         })
         .optional(),
     }),

@@ -1,3 +1,5 @@
+import fs from "fs/promises";
+import path from "path";
 import {
   http,
   HttpResponse,
@@ -7,6 +9,7 @@ import {
 } from "msw";
 import { setupServer } from "msw/node";
 import { type RawData } from "ws";
+import mime from "mime-types";
 import { clientIdentityStorage } from "./trace.js";
 import { logger } from "./logger.js";
 import {
@@ -17,8 +20,69 @@ import {
   Message,
   MessageType,
   parseMessage,
+  type MessageTypes,
+  type ParsedMessageType,
 } from "@mocky-balboa/websocket-messages";
 import { UnsetClientIdentity } from "@mocky-balboa/shared-config";
+
+interface OnResponseFromClientParams {
+  requestId: string;
+  message: ParsedMessageType<MessageTypes["RESPONSE"]>;
+}
+
+const getContentType = (filePath: string) => {
+  const contentType = mime.contentType(path.extname(filePath));
+  return contentType || "application/octet-stream";
+};
+
+const getFileContents = async (filePath: string) => {
+  const fileStats = await fs.stat(filePath);
+  if (!fileStats.isFile()) {
+    throw new Error(`Path ${filePath} is not a file`);
+  }
+
+  return fs.readFile(filePath);
+};
+
+/**
+ * Converts a response object from the client to a Mock Service Worker HttpResponse.
+ */
+const convertResponseFromClientToHttpResponse = async ({
+  requestId,
+  message,
+}: OnResponseFromClientParams) => {
+  // Not concerning our request
+  if (message.payload.id !== requestId) {
+    return;
+  }
+
+  // If the client has specified a network error, send the response as an error
+  if (message.payload.error) return HttpResponse.error();
+
+  // If there's no response from the client, pass the request through to the network
+  if (!message.payload.response) return passthrough();
+
+  // If there's a path from the client, load the file content and send it as the response
+  if (message.payload.response.path) {
+    const content = await getFileContents(message.payload.response.path);
+    const headers = new Headers(message.payload.response.headers);
+    // Prioritize the content type set on the headers sent from the client
+    const contentType =
+      headers.get("content-type") ??
+      getContentType(message.payload.response.path);
+
+    headers.set("content-type", contentType);
+    return new HttpResponse(content, {
+      status: message.payload.response.status,
+      headers,
+    });
+  }
+
+  return new HttpResponse(message.payload.response.body, {
+    status: message.payload.response.status,
+    headers: message.payload.response.headers,
+  });
+};
 
 /**
  * Processes the request to retrieve a response from the client falling back to passing the request through to the target URL.
@@ -42,38 +106,34 @@ const getResponseFromClient = async (
       reject(new Error("Request timed out"));
     }, timeoutDuration);
 
-    function onMessage(data: RawData) {
+    async function onMessage(data: RawData) {
       try {
         const message = parseMessage(data.toString());
 
         switch (message.type) {
           case MessageType.RESPONSE:
-            // Not concerning our request
-            if (message.payload.id !== requestId) {
-              return;
-            }
+            try {
+              const httpResponse =
+                await convertResponseFromClientToHttpResponse({
+                  requestId,
+                  message,
+                });
 
-            if (message.payload.error) {
-              resolve(HttpResponse.error());
-            } else {
-              if (!message.payload.response) {
-                resolve(passthrough());
-              } else {
-                resolve(
-                  new HttpResponse(message.payload.response.body, {
-                    status: message.payload.response.status,
-                    headers: message.payload.response.headers,
-                  }),
-                );
+              if (!httpResponse) {
+                return;
               }
+
+              clearTimeout(timeout);
+              connectionState.ws.off("message", onMessage);
+
+              connectionState.ws.send(
+                new Message(MessageType.ACK, {}, message.messageId).toString(),
+              );
+
+              resolve(httpResponse);
+            } catch (error) {
+              reject(error);
             }
-
-            clearTimeout(timeout);
-            connectionState?.ws.off("message", onMessage);
-
-            connectionState?.ws.send(
-              new Message(MessageType.ACK, {}, message.messageId).toString(),
-            );
             break;
         }
       } catch (error) {

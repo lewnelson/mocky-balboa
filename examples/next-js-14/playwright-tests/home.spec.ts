@@ -20,7 +20,6 @@ const waitForPortToBeOccupied = async (port: number) => {
   while (ticks < 10) {
     await waitFor(1000);
     const realPort = await detect(port);
-    console.log({ realPort, port });
     if (realPort !== port) {
       return;
     }
@@ -51,7 +50,7 @@ test.beforeEach(async ({ context }) => {
     console.log(data.toString());
   });
 
-  serverProcess.stdout.on("error", (data) => {
+  serverProcess.stderr.on("data", (data) => {
     console.error(data.toString());
   });
 

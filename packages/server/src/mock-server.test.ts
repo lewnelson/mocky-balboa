@@ -1,3 +1,4 @@
+import path from "node:path";
 import {
   afterAll,
   afterEach,
@@ -181,6 +182,143 @@ describe("mock server outbound http requests", () => {
           "Mocked Header Value",
         );
         expect(await response.json()).toEqual({ message: "Mocked response" });
+      });
+    });
+
+    test("when the client responds with a mocked response using a path and no content-type header, the file is sent as the response with the mime type detected", async () => {
+      ws.on("message", (message) => {
+        const parsedMessage = parseMessage(message.toString());
+        if (parsedMessage.type !== MessageType.REQUEST) return;
+
+        const expectedUrl = `http://localhost:${HttpServerPort}/endpoint`;
+        const { request } = parsedMessage.payload;
+        if (request.url !== expectedUrl || request.method !== "GET") return;
+
+        const responseMessage = new Message(MessageType.RESPONSE, {
+          id: parsedMessage.payload.id,
+          response: {
+            status: 200,
+            headers: {},
+            path: path.resolve(import.meta.dirname, "test", "mock-data.json"),
+          },
+        });
+
+        ws.send(responseMessage.toString());
+      });
+
+      await clientIdentityStorage.run(ClientIdentity, async () => {
+        const response = await fetch(
+          `http://localhost:${HttpServerPort}/endpoint`,
+        );
+        expect(response.status).toBe(200);
+        expect(response.headers.get("Content-Type")).toBe(
+          "application/json; charset=utf-8",
+        );
+        expect(await response.json()).toEqual({
+          items: [
+            { id: 1, name: "Item 1" },
+            { id: 2, name: "Item 2" },
+          ],
+        });
+      });
+    });
+
+    test("when the client responds with a mocked response using a path and a content-type header, the file is sent as the response with the specified content-type header", async () => {
+      ws.on("message", (message) => {
+        const parsedMessage = parseMessage(message.toString());
+        if (parsedMessage.type !== MessageType.REQUEST) return;
+
+        const expectedUrl = `http://localhost:${HttpServerPort}/endpoint`;
+        const { request } = parsedMessage.payload;
+        if (request.url !== expectedUrl || request.method !== "GET") return;
+
+        const responseMessage = new Message(MessageType.RESPONSE, {
+          id: parsedMessage.payload.id,
+          response: {
+            status: 200,
+            headers: {
+              "Content-Type": "text/plain",
+              "X-Custom-Header": "Mocked Header Value",
+            },
+            path: path.resolve(import.meta.dirname, "test", "mock-data.json"),
+          },
+        });
+
+        ws.send(responseMessage.toString());
+      });
+
+      await clientIdentityStorage.run(ClientIdentity, async () => {
+        const response = await fetch(
+          `http://localhost:${HttpServerPort}/endpoint`,
+        );
+        expect(response.status).toBe(200);
+        expect(response.headers.get("X-Custom-Header")).toBe(
+          "Mocked Header Value",
+        );
+        expect(response.headers.get("Content-Type")).toBe("text/plain");
+        expect(await response.json()).toEqual({
+          items: [
+            { id: 1, name: "Item 1" },
+            { id: 2, name: "Item 2" },
+          ],
+        });
+      });
+    });
+
+    describe("when the file passed on the response path does not exist", () => {
+      beforeEach(() => {
+        ws.on("message", (message) => {
+          const parsedMessage = parseMessage(message.toString());
+          if (parsedMessage.type !== MessageType.REQUEST) return;
+
+          const expectedUrl = `http://localhost:${HttpServerPort}/endpoint`;
+          const { request } = parsedMessage.payload;
+          if (request.url !== expectedUrl || request.method !== "GET") return;
+
+          const responseMessage = new Message(MessageType.RESPONSE, {
+            id: parsedMessage.payload.id,
+            response: {
+              status: 200,
+              headers: {},
+              path: path.resolve(
+                import.meta.dirname,
+                "test",
+                "mock-data.doesntexist.json",
+              ),
+            },
+          });
+
+          ws.send(responseMessage.toString());
+        });
+      });
+
+      test("it responds with a network error", async () => {
+        await clientIdentityStorage.run(ClientIdentity, async () => {
+          await expect(() =>
+            fetch(`http://localhost:${HttpServerPort}/endpoint`),
+          ).rejects.toThrowError();
+        });
+      });
+
+      test("it sends an error message to the client", async () => {
+        await clientIdentityStorage.run(ClientIdentity, async () => {
+          const waitForErrorPromise = waitForError(ws);
+          fetch(`http://localhost:${HttpServerPort}/endpoint`).catch(() => {});
+          const error = await waitForErrorPromise;
+
+          expect(error).toEqual(
+            expect.objectContaining({
+              type: MessageType.ERROR,
+              messageId: expect.any(String),
+              payload: {
+                id: expect.any(String),
+                message: expect.stringMatching(
+                  /^ENOENT: no such file or directory, stat '.*?packages\/server\/src\/test\/mock-data\.doesntexist\.json'$/,
+                ),
+              },
+            }),
+          );
+        });
       });
     });
   });

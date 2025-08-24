@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { createClient, Client } from "@mocky-balboa/playwright";
+import path from "path";
 import {
   Fight,
   FightStatus,
@@ -124,4 +125,24 @@ test.describe("when the data is loaded successfully", () => {
     const request = await requestPromise;
     expect(request.headers.get("X-Public-Api-Key")).toBe("public-api-key");
   });
+});
+
+test("loading fight data using file path", async ({ page }) => {
+  client.route(nextFightEndpoint, (route) => {
+    return route.fulfill({
+      status: 200,
+      path: path.resolve(__dirname, "james-clubber-lang.next-fight.json"),
+    });
+  });
+
+  client.route(trainingRegimeEndpoint, (route) => {
+    return route.fulfill({
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(trainingRegime),
+    });
+  });
+
+  await page.goto("http://localhost:3000");
+  await expect(page.getByText('James "Clubber" Lang')).toBeVisible();
 });

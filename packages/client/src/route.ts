@@ -64,6 +64,17 @@ export interface FulfillOptions {
    * @default 200
    */
   status?: number;
+  /**
+   * File path to use for the response body. The contents of the file will be loaded on the server
+   * and the content-type will be detected based on the file extension. Ensure you pass an absolute
+   * path to the file.
+   *
+   * @remarks
+   * If you specify a content-type header on your own, the mime-type detection will be skipped.
+   *
+   * @default undefined
+   */
+  path?: string;
 }
 
 /** Options when modifying a response */
@@ -112,6 +123,7 @@ export type ErrorRouteResponse = {
 export type FulfillRouteResponse = {
   type: "fulfill";
   response: Response;
+  path?: string | undefined;
 };
 
 /**
@@ -167,13 +179,14 @@ export class Route {
     headers,
     body,
     status,
+    path,
   }: FulfillOptions): FulfillRouteResponse {
     const response = new Response(body ?? optionsResponse?.body ?? "", {
       status: status ?? optionsResponse?.status ?? 200,
       headers: headers ?? optionsResponse?.headers ?? {},
     });
 
-    return { type: "fulfill", response } as const;
+    return { type: "fulfill", response, path };
   }
 
   /**
