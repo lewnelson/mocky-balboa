@@ -133,3 +133,272 @@ You might prefer to use the `startServers` function programmatically, especially
 </Tabs>
 
 See [startServers API reference](https://api-reference.mockybalboa.com/functions/_mocky-balboa_next-js.startServers) for full documentation on how to use `startServers`.
+
+## Working with Next.js caching
+
+When using the `app` directory in Next.js unless you opt out of caching in your application logic, then the server will cache fetch requests and app routes. This can become problematic in a test suite when determinism is required for robust testing.
+
+If you're application uses the `dynamic = 'force-dynamic'` or `revalidate = 0` directive, then you have already opted out of route level caching. However, you'll still encounter cached fetch requests (GET) unless you also opt out of fetch request caching.
+
+Don't worry, you're not going to have to start exporting conditional directives in your application to facilitate the tests. The whole ethos of Mocky Balboa is to provide a solution without having to modify your application logic.
+
+### Fetch (data) caching
+
+The easiest way to opt out of fetch request caching is to use the custom `CacheHandler` in your Next.js configuration from `@mocky-balboa/next-js`. This cache handler acts as a no-op cache handler that will disable the persistent cache.
+
+#### ESM example
+
+<Tabs groupId="javascript-language">
+  <TabItem value="typescript" label="TypeScript" default>
+        ```TypeScript
+        // next.config.ts
+        import type { NextConfig } from "next";
+        import { createRequire } from "node:module";
+
+        const require = createRequire(import.meta.url);
+
+        const nextConfig: NextConfig = {
+          cacheHandler: require.resolve("@mocky-balboa/next-js/cache-handler"),
+          cacheMaxMemorySize: 0,
+        };
+
+        export default nextConfig;
+        ```
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+      ```JavaScript
+      // next.config.mjs
+      import { createRequire } from "node:module";
+
+      const require = createRequire(import.meta.url);
+
+      /** @type {import('next').NextConfig} */
+      const nextConfig = {
+        cacheHandler: require.resolve("@mocky-balboa/next-js/cache-handler"),
+        cacheMaxMemorySize: 0,
+      };
+
+      export default nextConfig;
+      ```
+  </TabItem>
+</Tabs>
+
+#### CJS example
+
+<Tabs groupId="javascript-language">
+  <TabItem value="typescript" label="TypeScript" default>
+        ```TypeScript
+        // next.config.ts
+        import type { NextConfig } from "next";
+
+        const nextConfig: NextConfig = {
+          cacheHandler: require.resolve("@mocky-balboa/next-js/cache-handler"),
+          cacheMaxMemorySize: 0,
+        };
+
+        export default nextConfig;
+        ```
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+      ```JavaScript
+      // next.config.js
+      /** @type {import('next').NextConfig} */
+      const nextConfig = {
+        cacheHandler: require.resolve("@mocky-balboa/next-js/cache-handler"),
+        cacheMaxMemorySize: 0,
+      };
+
+      module.exports = nextConfig;
+      ```
+  </TabItem>
+</Tabs>
+
+### App router caching
+
+:::tip
+
+This section of documentation is only applicable to pages in the app router that opt-in to full dynamic caching.
+
+:::
+
+Using the `CacheHandler` as shown in the example above will opt out of the persistent cache for the app router. However concurrent requests to the same route will result in the route only being rendered once. Each incoming request will share the same stream from the renderer. This in turn means that testing the same route in parallel could cause issues.
+
+There are two ways to get around this behaviour:
+
+1. Run your tests serially. The obvious drawback here is that your tests will take longer to run.
+1. Spin up a new server instance for each of these tests. Check out the example below on how to do this in Playwright.
+
+<Tabs groupId="javascript-language">
+  <TabItem value="typescript" label="TypeScript" default>
+        ```TypeScript
+        import { test, expect } from "@playwright/test";
+        import { createClient, type Client } from "@mocky-balboa/playwright";
+        import getPort from "get-port";
+        import { detect } from "detect-port";
+        import { type ChildProcessWithoutNullStreams, spawn } from "node:child_process";
+
+        // Waits for a port to be occupied checking once every second for
+        // a maximum of 10 seconds.
+        const waitForPortToBeOccupied = async (port: number) => {
+          const waitFor = (ms: number) =>
+            new Promise((resolve) => setTimeout(resolve, ms));
+          let ticks = 0;
+          while (ticks < 10) {
+            await waitFor(1000);
+            const realPort = await detect(port);
+            if (realPort !== port) {
+              return;
+            }
+            ticks++;
+          }
+
+          throw new Error(`Timed out waiting for port ${port} to be occupied`);
+        };
+
+        let client: Client;
+        let applicationPort: number;
+        let serverProcess: ChildProcessWithoutNullStreams;
+        test.beforeEach(async ({ context }) => {
+          // Find a free port for the application
+          applicationPort = await getPort();
+          // Find a free port for the websocket server
+          const websocketServerPort = await getPort();
+          console.log(
+            `Starting server on port ${applicationPort} and websocket port ${websocketServerPort}`,
+          );
+
+          // Start the Next.js server via Mocky Balboa
+          serverProcess = spawn("pnpm", [
+            "mocky-balboa-next-js",
+            "--port",
+            applicationPort.toString(),
+            "--websocket-port",
+            websocketServerPort.toString(),
+          ]);
+
+          // Log all stdout from the server process
+          serverProcess.stdout.on("data", (data) => {
+            console.log(data.toString());
+          });
+
+          // Log all stderr from the server process
+          serverProcess.stderr.on("data", (data) => {
+            console.error(data.toString());
+          });
+
+          // Wait for the server processes to be ready
+          await Promise.all([
+            waitForPortToBeOccupied(applicationPort),
+            waitForPortToBeOccupied(websocketServerPort),
+          ]);
+
+          // Create the Mocky Balboa Playwright client to run against
+          // the server we just started
+          client = await createClient(context, {
+            port: websocketServerPort,
+          });
+        });
+
+        test.afterEach(async () => {
+          // Kill the server process after each test
+          serverProcess.kill();
+        });
+
+        test("...", async ({
+          page,
+        }) => {
+          // Visit pages on the server we started
+          await page.goto(`http://localhost:${applicationPort}`);
+        });
+        ```
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+      ```JavaScript
+      import { test, expect } from "@playwright/test";
+      import { createClient } from "@mocky-balboa/playwright";
+      import getPort from "get-port";
+      import { detect } from "detect-port";
+      import { spawn } from "node:child_process";
+
+      // Waits for a port to be occupied checking once every second for
+      // a maximum of 10 seconds.
+      const waitForPortToBeOccupied = async (port) => {
+        const waitFor = (ms: number) =>
+          new Promise((resolve) => setTimeout(resolve, ms));
+        let ticks = 0;
+        while (ticks < 10) {
+          await waitFor(1000);
+          const realPort = await detect(port);
+          if (realPort !== port) {
+            return;
+          }
+          ticks++;
+        }
+
+        throw new Error(`Timed out waiting for port ${port} to be occupied`);
+      };
+
+      let client;
+      let applicationPort;
+      let serverProcess;
+      test.beforeEach(async ({ context }) => {
+        // Find a free port for the application
+        applicationPort = await getPort();
+        // Find a free port for the websocket server
+        const websocketServerPort = await getPort();
+        console.log(
+          `Starting server on port ${applicationPort} and websocket port ${websocketServerPort}`,
+        );
+
+        // Start the Next.js server via Mocky Balboa
+        serverProcess = spawn("pnpm", [
+          "mocky-balboa-next-js",
+          "--port",
+          applicationPort.toString(),
+          "--websocket-port",
+          websocketServerPort.toString(),
+        ]);
+
+        // Log all stdout from the server process
+        serverProcess.stdout.on("data", (data) => {
+          console.log(data.toString());
+        });
+
+        // Log all stderr from the server process
+        serverProcess.stderr.on("data", (data) => {
+          console.error(data.toString());
+        });
+
+        // Wait for the server processes to be ready
+        await Promise.all([
+          waitForPortToBeOccupied(applicationPort),
+          waitForPortToBeOccupied(websocketServerPort),
+        ]);
+
+        // Create the Mocky Balboa Playwright client to run against
+        // the server we just started
+        client = await createClient(context, {
+          port: websocketServerPort,
+        });
+      });
+
+      test.afterEach(async () => {
+        // Kill the server process after each test
+        serverProcess.kill();
+      });
+
+      test("...", async ({
+        page,
+      }) => {
+        // Visit pages on the server we started
+        await page.goto(`http://localhost:${applicationPort}`);
+      });
+      ```
+  </TabItem>
+</Tabs>
+
+The obvious drawback here being that we need a new server process for each test. This can be inefficient and slow down our tests when used in excess, but can be a good strategy when you need to test different configurations or scenarios (in parallel) for routes which opt-in to full dynamic caching.
+
+### Further reading
+
+If you want to learn more about caching in Next.js, I'd recommend checking out the [official documentation](https://nextjs.org/docs/app/guides/caching).

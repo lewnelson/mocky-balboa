@@ -1,8 +1,8 @@
 import { test, expect } from "@playwright/test";
-import { createClient, Client } from "@mocky-balboa/playwright";
+import { createClient, type Client } from "@mocky-balboa/playwright";
 import getPort from "get-port";
 import { detect } from "detect-port";
-import { ChildProcessWithoutNullStreams, spawn } from "node:child_process";
+import { type ChildProcessWithoutNullStreams, spawn } from "node:child_process";
 import {
   Fight,
   FightStatus,
