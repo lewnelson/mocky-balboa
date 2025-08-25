@@ -83,28 +83,10 @@ jobs:
         shell: bash
         run: pnpm build:packages
 
-      # Need to run "pnpm install" after build to link the CLI to .bin
-      - name: pnpm install
-        uses: ./.github/actions/pnpm-install
-
-      - name: Build example
-        shell: bash
-        run: pnpm --filter "./examples/${{ matrix.example }}" build
-
-      - name: Serve example
-        shell: bash
-        run: pnpm --filter "./examples/${{ matrix.example }}" start:tests &
-
-      - name: Wait for server to be ready
-        run: |
-          for i in $(seq 1 20); do
-            curl -f http://localhost:3000 > /dev/null && break
-            echo "Waiting for server to be available..."
-            sleep 1
-          done
-
-          # Check if the loop finished without success
-          curl -f http://localhost:3000 > /dev/null || (echo "Server is not available after 20 seconds" && exit 1)
+      - name: Build and serve example application
+        uses: ./.github/actions/build-and-serve-example
+        with:
+          example: ${{ matrix.example }}
 
       - name: Get installed Playwright version
         id: playwright-version
@@ -147,28 +129,10 @@ jobs:
         shell: bash
         run: pnpm build:packages
 
-      # Need to run "pnpm install" after build to link the CLI to .bin
-      - name: pnpm install
-        uses: ./.github/actions/pnpm-install
-
-      - name: Build example
-        shell: bash
-        run: pnpm --filter "./examples/${{ matrix.example }}" build
-
-      - name: Serve example
-        shell: bash
-        run: pnpm --filter "./examples/${{ matrix.example }}" start:tests &
-
-      - name: Wait for server to be ready
-        run: |
-          for i in $(seq 1 20); do
-            curl -f http://localhost:3000 > /dev/null && break
-            echo "Waiting for server to be available..."
-            sleep 1
-          done
-
-          # Check if the loop finished without success
-          curl -f http://localhost:3000 > /dev/null || (echo "Server is not available after 20 seconds" && exit 1)
+      - name: Build and serve example application
+        uses: ./.github/actions/build-and-serve-example
+        with:
+          example: ${{ matrix.example }}
 
       - name: Get installed Cypress version
         id: cypress-version
