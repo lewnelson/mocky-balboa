@@ -1,6 +1,7 @@
 import { MessageType, parseMessage } from "@mocky-balboa/websocket-messages";
 import getPort from "get-port";
-import { WebSocket, WebSocketServer, type RawData } from "ws";
+import { WebSocketServer, type RawData } from "ws";
+import WebSocket from "isomorphic-ws";
 import express from "express";
 import { Server } from "node:http";
 
@@ -41,8 +42,8 @@ export const waitForAckIdle = async (ws: WebSocket): Promise<void> => {
       }, 50);
     };
 
-    ws.on("message", (message: RawData) => {
-      const parsedMessage = parseMessage(message.toString());
+    ws.addEventListener("message", ({ data }: WebSocket.MessageEvent) => {
+      const parsedMessage = parseMessage(data.toString());
       if (parsedMessage.type === MessageType.ACK) {
         resetTimer();
       }

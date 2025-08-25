@@ -1,13 +1,13 @@
-import { test, expect } from "@playwright/test";
-import { createClient, type Client } from "@mocky-balboa/playwright";
+import { type Client, createClient } from "@mocky-balboa/playwright";
+import { expect, test } from "@playwright/test";
 import getPort from "get-port";
 import { detect } from "detect-port";
 import { type ChildProcessWithoutNullStreams, spawn } from "node:child_process";
 import {
-  Fight,
+  type Fight,
   FightStatus,
   TrainingIntensity,
-  TrainingRegime,
+  type TrainingRegime,
 } from "@/lib/data";
 
 const nextFightEndpoint = "https://mickeylovesyou.com/next-fight";

@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 100
 title: Custom integration
 ---
 <head>
@@ -86,7 +86,38 @@ The following example demonstrates how to create and connect a client to the Moc
   </TabItem>
 </Tabs>
 
-Make sure to disconnect the client from the Mocky Balboa server when you close the browser.
+## Passing the client ID to the server
+
+You need to make sure you pass the client ID on every request to the server via a custom header.
+
+<Tabs groupId="javascript-language">
+  <TabItem value="typescript" label="TypeScript" default>
+      ```TypeScript
+      import { ClientIdentityStorageHeader } from "@mocky-balboa/client";
+
+      // This is specific to the integration you are creating
+      // Here's how the headers are set in Playwright on the browser context
+      context.setExtraHTTPHeaders({
+        [ClientIdentityStorageHeader]: client.id,
+      });
+      ```
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+      ```JavaScript
+      import { ClientIdentityStorageHeader } from "@mocky-balboa/client";
+
+      // This is specific to the integration you are creating
+      // Here's how the headers are set in Playwright on the browser context
+      context.setExtraHTTPHeaders({
+        [ClientIdentityStorageHeader]: client.id,
+      });
+      ```
+  </TabItem>
+</Tabs>
+
+## Disconnecting the client
+
+Make sure to disconnect the client from the Mocky Balboa server when you are done with it, i.e. when the test finished (either fails or passes).
 
 <Tabs groupId="javascript-language">
   <TabItem value="typescript" label="TypeScript" default>

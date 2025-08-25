@@ -13,7 +13,8 @@ import {
   parseMessage,
 } from "@mocky-balboa/websocket-messages";
 import { Client } from "./client.js";
-import { type RawData, type WebSocketServer, WebSocket } from "ws";
+import { type RawData, type WebSocketServer } from "ws";
+import WebSocket from "isomorphic-ws";
 import {
   closeWebSocketServer,
   startWebSocketServer,

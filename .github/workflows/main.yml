@@ -64,8 +64,8 @@ jobs:
         id: finds-examples
         uses: ./.github/actions/find-examples
 
-  examples_playwright_tests:
-    name: 🎭 Run Playwright tests for examples
+  examples_tests:
+    name: ➿ Run tests for examples
     runs-on: ubuntu-latest
     needs: find_examples
     strategy:
@@ -122,8 +122,28 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: pnpm --filter "./examples/${{ matrix.example }}" exec playwright install --with-deps
 
-      - name: Run Tests for ${{ matrix.example }}
+      - name: Run Playwright tests for ${{ matrix.example }}
         run: pnpm --filter "./examples/${{ matrix.example }}" test:playwright
+
+      - name: Get installed Cypress version
+        id: cypress-version
+        run: |
+          echo "pnpm --filter \"./examples/${{ matrix.example }}\" exec cypress --version | grep \"Cypress package version:\" | sed 's/Cypress package version: //g'"
+
+      - uses: actions/cache@v3
+        id: cypress-cache
+        with:
+          path: "~/.cache/Cypress"
+          key: "${{ runner.os }}-cypress-${{ steps.cypress-version.outputs.version }}"
+          restore-keys: |
+            ${{ runner.os }}-cypress-
+
+      - name: Install Cypress's dependencies
+        if: steps.cypress-cache.outputs.cache-hit != 'true'
+        run: pnpm --filter "./examples/${{ matrix.example }}" exec cypress install
+
+      - name: Run Cypress tests for ${{ matrix.example }}
+        run: pnpm --filter "./examples/${{ matrix.example }}" test:cypress
 
   deploy:
     name: Release packages

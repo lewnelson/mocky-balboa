@@ -7,8 +7,8 @@ import {
   type ParsedMessageType,
 } from "@mocky-balboa/websocket-messages";
 import { v4 as uuid } from "uuid";
-import { WebSocket, type RawData } from "ws";
 import { minimatch } from "minimatch";
+import WebSocket from "isomorphic-ws";
 import { waitForAck } from "./utils.js";
 import { Route, type RouteResponse } from "./route.js";
 import { DefaultWebSocketServerPort } from "@mocky-balboa/shared-config";
@@ -127,7 +127,7 @@ export class Client {
         reject(new Error("Timed out connecting to server"));
       }, timeoutDuration);
 
-      ws.on("open", () => {
+      ws.addEventListener("open", () => {
         clearTimeout(timeout);
         resolve();
       });
@@ -321,7 +321,7 @@ export class Client {
    *
    * @param data - the raw WebSocket message data
    */
-  private async onMessage(data: RawData) {
+  private async onMessage({ data }: WebSocket.MessageEvent) {
     if (!this._ws) {
       throw new Error("WebSocket is not connected");
     }
@@ -367,7 +367,7 @@ export class Client {
     // Wait until the server has acknowledged the identification message.
     await identifyAckPromise;
 
-    this._ws.on("message", this.onMessage);
+    this._ws.addEventListener("message", this.onMessage);
   }
 
   /**

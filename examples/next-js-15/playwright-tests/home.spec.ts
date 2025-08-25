@@ -2,10 +2,10 @@ import { test, expect } from "@playwright/test";
 import { createClient, Client } from "@mocky-balboa/playwright";
 import path from "path";
 import {
-  Fight,
+  type Fight,
   FightStatus,
   TrainingIntensity,
-  TrainingRegime,
+  type TrainingRegime,
 } from "@/lib/data";
 
 const nextFightEndpoint = "https://mickeylovesyou.com/next-fight";

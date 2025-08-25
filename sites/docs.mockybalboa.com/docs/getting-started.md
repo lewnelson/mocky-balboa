@@ -15,10 +15,11 @@ Check out the guides below to get started in your framework.
 
 ### Browser automation integrations
 
-- [playwright](./client/playwright)
-- [custom integration](./client/custom)
+- [Playwright](./client/playwright)
+- [Cypress](./client/cypress)
+- [Custom integration](./client/custom)
 
 ### SSR Framework integrations
 
 - [Next.js](./server/next-js)
-- [custom integration](./server/custom)
+- [Custom integration](./server/custom)

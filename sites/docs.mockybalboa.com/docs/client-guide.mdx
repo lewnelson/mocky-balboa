@@ -142,7 +142,7 @@ Use `client.waitForRequest` to assert on the request being sent on the server.
 <Tabs groupId="javascript-language">
   <TabItem value="typescript" label="TypeScript" default>
     ```TypeScript
-    const requestPromise = client.waitForRequest();
+    const requestPromise = client.waitForRequest("**/api");
 
     // Run code that triggers the request, i.e. loading a page
 

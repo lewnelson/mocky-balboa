@@ -9,7 +9,7 @@ participant External API
 
 entryspacing 1.0
 group Establish client connection
-Test->Mocky Balboa Client:    Create client    
+Test->Mocky Balboa Client:    Create client
 
 note over Mocky Balboa Client:Generate client id
 
@@ -17,7 +17,7 @@ Mocky Balboa Client->Mocky Balboa server:<align:center>Establish connection\nwit
 
 note over Mocky Balboa server:Store connection\nagainst client id
 
-Mocky Balboa server->Mocky Balboa Client:    Ack client identification    
+Mocky Balboa server->Mocky Balboa Client:    Ack client identification
 
 Mocky Balboa Client->Test:<align:center>Client created\nand connection\nestablished</align>
 end

@@ -1,7 +1,7 @@
 {
-  "name": "@mocky-balboa/client",
+  "name": "@mocky-balboa/cypress",
   "version": "1.0.0",
-  "description": "Client library for Mocky Balboa to interact with the WebSocket server for real-time network mocking in your test suites.",
+  "description": "Cypress integration for Mocky Balboa. Mock your server-side network requests directly inside your Cypress tests.",
   "type": "module",
   "homepage": "https://docs.mockybalboa.com",
   "bugs": {
@@ -10,16 +10,16 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mocky-balboa/mocky-balboa.git",
-    "directory": "packages/client"
+    "directory": "packages/cypress"
   },
   "keywords": [
+    "cypress",
     "mocking",
     "network",
     "testing",
     "tests",
     "integration",
-    "server",
-    "client"
+    "server"
   ],
   "author": {
     "name": "Lewis Nelson",
@@ -27,17 +27,17 @@
   },
   "license": "MIT",
   "packageManager": "pnpm@10.14.0",
-  "main": "./dist/cjs/client.cjs",
-  "types": "./dist/cjs/client.d.ts",
+  "main": "./dist/cjs/cypress.cjs",
+  "types": "./dist/cjs/cypress.d.ts",
   "exports": {
     ".": {
       "import": {
-        "default": "./dist/esm/client.js",
-        "types": "./dist/esm/client.d.ts"
+        "default": "./dist/esm/cypress.js",
+        "types": "./dist/esm/cypress.d.ts"
       },
       "require": {
-        "default": "./dist/cjs/client.cjs",
-        "types": "./dist/cjs/client.d.ts"
+        "default": "./dist/cjs/cypress.cjs",
+        "types": "./dist/cjs/cypress.d.ts"
       }
     }
   },
@@ -53,31 +53,25 @@
     "post:build:watch": "chokidar \"dist/cjs/**/*.cjs\" -c \"pnpm run post:build\"",
     "clean": "rimraf dist",
     "release": "semantic-release",
-    "test": "vitest"
+    "test": "echo \"No tests\""
   },
   "dependencies": {
+    "@mocky-balboa/client": "workspace:*",
     "@mocky-balboa/logger": "workspace:*",
-    "@mocky-balboa/shared-config": "workspace:*",
-    "@mocky-balboa/websocket-messages": "workspace:*",
-    "minimatch": "^10.0.3",
     "pino": "catalog:",
-    "pino-pretty": "catalog:",
-    "uuid": "catalog:",
-    "isomorphic-ws": "^5.0.0"
+    "pino-pretty": "catalog:"
+  },
+  "peerDependencies": {
+    "cypress": ">=14.0.0"
   },
   "devDependencies": {
     "@swc/cli": "catalog:",
     "@swc/core": "catalog:",
     "chokidar-cli": "catalog:",
-    "@types/express": "catalog:",
+    "cypress": "^15.0.0",
     "@types/node": "catalog:",
-    "@types/ws": "catalog:",
     "concurrently": "catalog:",
-    "express": "catalog:",
-    "get-port": "catalog:",
     "rimraf": "catalog:",
-    "typescript": "catalog:",
-    "vitest": "catalog:",
-    "ws": "catalog:"
+    "typescript": "catalog:"
   }
 }
