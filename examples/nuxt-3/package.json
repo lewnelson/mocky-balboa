@@ -8,7 +8,6 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
     "serve": "node ./.output/server/index.mjs",
     "test:cypress": "pnpm cypress run",
     "test:playwright": "pnpm playwright test",
