@@ -15,7 +15,7 @@ runs:
 
     - name: Build example
       shell: bash
-      run: pnpm --filter "./examples/${{ inputs.example }}" build
+      run: pnpm --filter "./examples/${{ inputs.example }}" build:tests
 
     - name: Serve example
       shell: bash

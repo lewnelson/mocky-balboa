@@ -1,4 +1,4 @@
-# Mocky Balboa Next.js v15 integration example
+# Mocky Balboa Nuxt v4 integration example
 
 - Playwright tests are contained within the `playwright-tests` directory.
 - Cypress tests are contained within the `cypress-tests` directory.
