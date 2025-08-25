@@ -151,7 +151,7 @@ jobs:
     needs:
       - lint
       - package_tests
-      - examples_playwright_tests
+      - examples_tests
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
