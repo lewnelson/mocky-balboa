@@ -109,7 +109,8 @@ jobs:
       - name: Get installed Playwright version
         id: playwright-version
         run: |
-          VERSION=$(pnpm --filter \"./examples/${{ matrix.example }}\" exec playwright --version)
+          VERSION=$(pnpm --filter "./examples/${{ matrix.example }}" exec playwright --version)
+          echo "Playwright version: $VERSION"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - uses: actions/cache@v3
@@ -172,7 +173,8 @@ jobs:
       - name: Get installed Cypress version
         id: cypress-version
         run: |
-          VERSION=$(pnpm --filter \"./examples/${{ matrix.example }}\" exec cypress --version | grep \"Cypress package version:\" | sed 's/Cypress package version: //g')
+          VERSION=$(pnpm --filter "./examples/${{ matrix.example }}" exec cypress --version | grep "Cypress package version:" | sed 's/Cypress package version: //g')
+          echo "Cypress version: $VERSION"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - uses: actions/cache@v3
