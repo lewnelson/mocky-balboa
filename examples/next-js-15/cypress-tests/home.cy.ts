@@ -6,8 +6,8 @@ import {
 } from "../src/lib/data";
 import { type Client, createClient } from "@mocky-balboa/cypress";
 
-const nextFightEndpoint = "https://mickeylovesyou.com/next-fight";
-const trainingRegimeEndpoint = "https://mickeylovesyou.com/training-regime";
+const nextFightEndpoint = "http://localhost:58157/api/next-fight";
+const trainingRegimeEndpoint = "http://localhost:58157/api/training-regime";
 
 const nextFight: Fight = {
   id: "fight-id",

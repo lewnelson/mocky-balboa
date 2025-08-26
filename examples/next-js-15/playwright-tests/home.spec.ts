@@ -8,8 +8,8 @@ import {
   type TrainingRegime,
 } from "@/lib/data";
 
-const nextFightEndpoint = "https://mickeylovesyou.com/next-fight";
-const trainingRegimeEndpoint = "https://mickeylovesyou.com/training-regime";
+const nextFightEndpoint = "http://localhost:58157/api/next-fight";
+const trainingRegimeEndpoint = "http://localhost:58157/api/training-regime";
 
 let client: Client;
 test.beforeEach(async ({ context }) => {

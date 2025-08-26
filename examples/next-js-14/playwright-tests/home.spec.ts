@@ -10,8 +10,8 @@ import {
   type TrainingRegime,
 } from "@/lib/data";
 
-const nextFightEndpoint = "https://mickeylovesyou.com/next-fight";
-const trainingRegimeEndpoint = "https://mickeylovesyou.com/training-regime";
+const nextFightEndpoint = "http://localhost:58157/api/next-fight";
+const trainingRegimeEndpoint = "http://localhost:58157/api/training-regime";
 
 const waitForPortToBeOccupied = async (port: number) => {
   const waitFor = (ms: number) =>

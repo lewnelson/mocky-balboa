@@ -50,7 +50,7 @@ export const getTrainingRegime = async (): Promise<
 > => {
   try {
     const response = await useFetch<TrainingRegime>(
-      "https://mickeylovesyou.com/training-regime",
+      "http://localhost:58157/api/training-regime",
     );
 
     if (!response.data.value) {
@@ -67,7 +67,7 @@ export const getTrainingRegime = async (): Promise<
 export const getNextFight = async (): Promise<ApiResponse<Fight>> => {
   try {
     const response = await useFetch<Fight>(
-      "https://mickeylovesyou.com/next-fight",
+      "http://localhost:58157/api/next-fight",
       {
         headers: {
           "X-Public-Api-Key": "public-api-key",
