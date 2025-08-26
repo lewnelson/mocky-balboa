@@ -31,7 +31,7 @@ interface OnResponseFromClientParams {
 }
 
 const getContentType = (filePath: string) => {
-  const contentType = mime.contentType(path.extname(filePath));
+  const contentType = mime.contentType(path.basename(filePath));
   return contentType || "application/octet-stream";
 };
 

@@ -43,9 +43,7 @@ describe("Route.fulfill", () => {
     expect(result).toEqual({ type: "fulfill", response: expect.any(Response) });
 
     const response = result.response;
-    expect(Object.fromEntries(response.headers)).toEqual({
-      "content-type": "text/plain;charset=UTF-8",
-    });
+    expect(Object.fromEntries(response.headers)).toEqual({});
     expect(response.status).toBe(200);
     const body = await response.text();
     expect(body).toBe("");

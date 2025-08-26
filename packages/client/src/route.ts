@@ -181,7 +181,7 @@ export class Route {
     status,
     path,
   }: FulfillOptions): FulfillRouteResponse {
-    const response = new Response(body ?? optionsResponse?.body ?? "", {
+    const response = new Response(body ?? optionsResponse?.body ?? null, {
       status: status ?? optionsResponse?.status ?? 200,
       headers: headers ?? optionsResponse?.headers ?? {},
     });
