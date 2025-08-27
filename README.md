@@ -6,26 +6,22 @@ A server-side network mocking library for your SSR applications. Fixture http ne
 
 Check out the [documentation](https://docs.mockybalboa.com) to get started.
 
-## 🚧 Integrations roadmap
+## Server integrations
 
-### SSR frameworks
+- [Astro](https://astro.build/)
+- [Express](https://expressjs.com/)
+- [Next.js](https://nextjs.org/)
+- [Nuxt](https://nuxt.com/)
+- [SvelteKit](https://svelte.dev/docs/kit/introduction)
 
-| Project | Version | Status |
-| :--- | :---: | :---: |
-| [Next.js](https://nextjs.org/) | v14.x.x | Supported |
-| [Next.js](https://nextjs.org/) | v15.x.x | Supported |
-| [Nuxt](https://nuxt.com/) | v3.x.x | Supported |
-| [Nuxt](https://nuxt.com/) | v4.x.x | Supported |
-| [Astro](https://astro.build/) | v5.x.x | Planned |
-| [SvelteKit](https://svelte.dev/docs/kit/introduction) | v2.x.x | Planned |
+## Browser automation tool support
 
-### Browser automation tools
+- [Playwright](https://playwright.dev/)
+- [Cypress](https://www.cypress.io/)
 
-| Project | Version | Status |
-| :--- | :---: | :---: |
-| [Playwright](https://playwright.dev/) | v1.x.x | Supported |
-| [Cypress](https://www.cypress.io/) | v14.x.x | Supported |
-| [Cypress](https://www.cypress.io/) | v15.x.x | Supported |
+## Custom integrations
+
+Don't see your framework? Create a [custom server integration](https://docs.mockybalboa.com/docs/server/custom) or a [custom client integration](https://docs.mockybalboa.com/docs/client/custom). Alternatively submit a pull request or report an issue to add support for your framework.
 
 ## Examples
 
