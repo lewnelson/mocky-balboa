@@ -15,7 +15,6 @@
     "start:tests-dev": "ENABLE_MOCKY_BALBOA=true pnpm dev --host 0.0.0.0"
   },
   "dependencies": {
-    "@nuxtjs/tailwindcss": "^6.14.0",
     "@primeuix/themes": "^1.2.3",
     "nuxt": "^3.18.1",
     "primevue": "^4.3.7",

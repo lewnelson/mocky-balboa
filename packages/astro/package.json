@@ -73,7 +73,7 @@
     "@mocky-balboa/server": "workspace:*",
     "@mocky-balboa/shared-config": "workspace:*",
     "commander": "^14.0.0",
-    "express": "^5.0.3"
+    "express": "catalog:"
   },
   "peerDependencies": {
     "astro": ">=3.5.0"

@@ -8,7 +8,6 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
   modules: [
     ["@mocky-balboa/nuxt", { enabled: mockyBalboaModuleEnabled }],
-    "@nuxtjs/tailwindcss",
     "@primevue/nuxt-module",
   ],
   primevue: {
