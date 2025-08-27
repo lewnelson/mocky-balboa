@@ -6,6 +6,7 @@ import {
   bindMockServiceWorker,
   type MockServerOptions,
 } from "./mock-server.js";
+import { logger } from "./logger.js";
 
 export interface ServerOptions {
   /**
@@ -26,10 +27,12 @@ export interface ServerOptions {
 export const startServer = async ({
   webSocketServerOptions = {},
 }: ServerOptions = {}) => {
+  logger.info("Starting Mocky Balboa server");
   await Promise.all([
     startWebSocketServer(webSocketServerOptions),
     bindMockServiceWorker(),
   ]);
+  logger.info("Mocky Balboa server started");
 };
 
 export { clientIdentityStorage } from "./trace.js";

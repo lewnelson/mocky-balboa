@@ -57,9 +57,7 @@
   },
   "dependencies": {
     "@mocky-balboa/client": "workspace:*",
-    "@mocky-balboa/logger": "workspace:*",
-    "pino": "catalog:",
-    "pino-pretty": "catalog:"
+    "@mocky-balboa/logger": "workspace:*"
   },
   "peerDependencies": {
     "cypress": ">=14.0.0"

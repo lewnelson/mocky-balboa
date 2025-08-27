@@ -49,7 +49,7 @@ const connectionOnMessage =
           throw new Error(`Unhandled message type: ${message.type}`);
       }
     } catch (error) {
-      logger.error({ error }, "Error handling message");
+      logger.error("Error handling message", error);
       connectionState.ws.close();
     }
   };
@@ -94,7 +94,7 @@ export const startWebSocketServer = async ({
     return new Promise<void>((resolve, reject) => {
       wss.close((error) => {
         if (error) {
-          logger.error({ error }, "Error closing WebSocket server");
+          logger.error("Error closing WebSocket server", error);
           reject(error);
         } else {
           connections.clear();

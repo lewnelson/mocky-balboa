@@ -21,7 +21,6 @@ export const waitForMessage = async <T, done extends boolean = boolean>(
 
     async function onMessage(data: RawData) {
       const message = parseMessage(data.toString());
-      console.log("message", message);
       try {
         const [result, done] = handler(message);
         if (done) {

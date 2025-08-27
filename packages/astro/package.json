@@ -1,7 +1,7 @@
 {
-  "name": "@mocky-balboa/logger",
+  "name": "@mocky-balboa/astro",
   "version": "1.0.0",
-  "description": "Logger library for Mocky Balboa",
+  "description": "Astro integration for Mocky Balboa. Mock your server-side network requests in your test suites.",
   "type": "module",
   "homepage": "https://docs.mockybalboa.com",
   "bugs": {
@@ -10,26 +10,47 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mocky-balboa/mocky-balboa.git",
-    "directory": "packages/logger"
+    "directory": "packages/astro"
   },
-  "keywords": [],
+  "keywords": [
+    "astro",
+    "mocking",
+    "network",
+    "testing",
+    "tests",
+    "integration",
+    "server"
+  ],
   "author": {
     "name": "Lewis Nelson",
     "url": "https://lewnelson.com"
   },
   "license": "MIT",
   "packageManager": "pnpm@10.14.0",
-  "main": "./dist/cjs/logger.cjs",
-  "types": "./dist/cjs/logger.d.ts",
+  "main": "./dist/cjs/astro.cjs",
+  "types": "./dist/cjs/astro.d.ts",
+  "bin": {
+    "mocky-balboa-astro": "./dist/esm/cli.js"
+  },
   "exports": {
     ".": {
       "import": {
-        "default": "./dist/esm/logger.js",
-        "types": "./dist/esm/logger.d.ts"
+        "default": "./dist/esm/astro.js",
+        "types": "./dist/esm/astro.d.ts"
       },
       "require": {
-        "default": "./dist/cjs/logger.cjs",
-        "types": "./dist/cjs/logger.d.ts"
+        "default": "./dist/cjs/astro.cjs",
+        "types": "./dist/cjs/astro.d.ts"
+      }
+    },
+    "./middleware": {
+      "import": {
+        "default": "./dist/esm/middleware.js",
+        "types": "./dist/esm/middleware.d.ts"
+      },
+      "require": {
+        "default": "./dist/cjs/middleware.cjs",
+        "types": "./dist/cjs/middleware.d.ts"
       }
     }
   },
@@ -48,7 +69,15 @@
     "test": "echo \"No tests\""
   },
   "dependencies": {
-    "chalk": "^4.0.0"
+    "@mocky-balboa/express": "workspace:*",
+    "@mocky-balboa/logger": "workspace:*",
+    "@mocky-balboa/server": "workspace:*",
+    "@mocky-balboa/shared-config": "workspace:*",
+    "commander": "^14.0.0",
+    "express": "^5.0.3"
+  },
+  "peerDependencies": {
+    "astro": ">=3.5.0"
   },
   "devDependencies": {
     "@swc/cli": "catalog:",
@@ -56,6 +85,7 @@
     "chokidar-cli": "catalog:",
     "@types/node": "catalog:",
     "concurrently": "catalog:",
+    "astro": "^5.13.3",
     "rimraf": "catalog:",
     "typescript": "catalog:"
   }

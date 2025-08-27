@@ -49,7 +49,7 @@ export const createClient = async (
   client.on(
     MessageType.ERROR,
     (message: ParsedMessageType<MessageTypes["ERROR"]>) => {
-      logger.error({ message }, "Error received from Mocky Balboa mock server");
+      logger.error("Error received from Mocky Balboa mock server", { message });
       context.close();
     },
   );

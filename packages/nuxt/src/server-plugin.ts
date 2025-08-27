@@ -9,12 +9,7 @@ import {
   UnsetClientIdentity,
 } from "@mocky-balboa/server";
 import { logger } from "./logger.js";
-import pinoPretty from "pino-pretty";
 import type { EventHandler } from "h3";
-
-// Required to ensure pino-pretty is bundled for Nuxt as it's only referenced as a path
-// in calling pino() on transport
-pinoPretty();
 
 /**
  * Starts the Mocky Balboa server. Should only be called once at runtime.
@@ -45,11 +40,6 @@ export default <NitroAppPlugin>async function (app) {
   const options = config?.[RuntimeConfigKey] as
     | MockyBalboaModuleOptions
     | undefined;
-
-  logger.info(
-    { serverOptions: options?.serverOptions },
-    "Starting Mocky Balboa server",
-  );
 
   // Start the WebSocket server and mock service worker
   await startServer(options?.serverOptions);

@@ -12,6 +12,7 @@ import WebSocket from "isomorphic-ws";
 import { waitForAck } from "./utils.js";
 import { Route, type RouteResponse } from "./route.js";
 import { DefaultWebSocketServerPort } from "@mocky-balboa/shared-config";
+import { logger } from "./logger.js";
 
 /** Default timeout duration in milliseconds for establishing an identified connection with the WebSocket server */
 export const DefaultWebSocketServerTimeout = 5000;
@@ -333,7 +334,22 @@ export class Client {
 
     const handlers = this.messageHandlers.get(parsedMessage.type);
     if (handlers) {
-      await Promise.all([...handlers].map((handler) => handler(parsedMessage)));
+      const results = await Promise.allSettled(
+        [...handlers].map((handler) => handler(parsedMessage)),
+      );
+      const errors = results
+        .filter((result) => result.status === "rejected")
+        .map((result) => result.reason);
+
+      errors.forEach((error) => {
+        logger.error(`Error handling message ${parsedMessage.type}`, error);
+      });
+
+      if (errors.length > 0) {
+        throw new Error(
+          `Failed to handle message "${parsedMessage.type}". Check console or stdout for more details.`,
+        );
+      }
     }
   }
 

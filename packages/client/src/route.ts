@@ -361,10 +361,7 @@ export class Route {
         });
         return response;
       } catch (error) {
-        logger.error(
-          { error },
-          `Error fetching ${request.method} ${request.url}`,
-        );
+        logger.error(`Error fetching ${request.method} ${request.url}`, error);
       } finally {
         attempts++;
       }

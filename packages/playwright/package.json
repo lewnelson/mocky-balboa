@@ -57,9 +57,7 @@
   },
   "dependencies": {
     "@mocky-balboa/client": "workspace:*",
-    "@mocky-balboa/logger": "workspace:*",
-    "pino": "catalog:",
-    "pino-pretty": "catalog:"
+    "@mocky-balboa/logger": "workspace:*"
   },
   "peerDependencies": {
     "@playwright/test": ">=1.0.0"

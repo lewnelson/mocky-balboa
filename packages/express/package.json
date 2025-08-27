@@ -1,7 +1,7 @@
 {
-  "name": "@mocky-balboa/logger",
+  "name": "@mocky-balboa/express",
   "version": "1.0.0",
-  "description": "Logger library for Mocky Balboa",
+  "description": "Express integration for Mocky Balboa. Mock your server-side network requests in your test suites.",
   "type": "module",
   "homepage": "https://docs.mockybalboa.com",
   "bugs": {
@@ -10,26 +10,34 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mocky-balboa/mocky-balboa.git",
-    "directory": "packages/logger"
+    "directory": "packages/express"
   },
-  "keywords": [],
+  "keywords": [
+    "express",
+    "mocking",
+    "network",
+    "testing",
+    "tests",
+    "integration",
+    "server"
+  ],
   "author": {
     "name": "Lewis Nelson",
     "url": "https://lewnelson.com"
   },
   "license": "MIT",
   "packageManager": "pnpm@10.14.0",
-  "main": "./dist/cjs/logger.cjs",
-  "types": "./dist/cjs/logger.d.ts",
+  "main": "./dist/cjs/express.cjs",
+  "types": "./dist/cjs/express.d.ts",
   "exports": {
     ".": {
       "import": {
-        "default": "./dist/esm/logger.js",
-        "types": "./dist/esm/logger.d.ts"
+        "default": "./dist/esm/express.js",
+        "types": "./dist/esm/express.d.ts"
       },
       "require": {
-        "default": "./dist/cjs/logger.cjs",
-        "types": "./dist/cjs/logger.d.ts"
+        "default": "./dist/cjs/express.cjs",
+        "types": "./dist/cjs/express.d.ts"
       }
     }
   },
@@ -48,7 +56,12 @@
     "test": "echo \"No tests\""
   },
   "dependencies": {
-    "chalk": "^4.0.0"
+    "@mocky-balboa/logger": "workspace:*",
+    "@mocky-balboa/server": "workspace:*",
+    "@mocky-balboa/shared-config": "workspace:*"
+  },
+  "peerDependencies": {
+    "express": ">=4.0.0"
   },
   "devDependencies": {
     "@swc/cli": "catalog:",
@@ -56,6 +69,8 @@
     "chokidar-cli": "catalog:",
     "@types/node": "catalog:",
     "concurrently": "catalog:",
+    "@types/express": "^4.0.0",
+    "express": "^4.0.0",
     "rimraf": "catalog:",
     "typescript": "catalog:"
   }

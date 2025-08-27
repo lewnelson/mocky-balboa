@@ -60,8 +60,6 @@
     "@mocky-balboa/shared-config": "workspace:*",
     "@mocky-balboa/websocket-messages": "workspace:*",
     "minimatch": "^10.0.3",
-    "pino": "catalog:",
-    "pino-pretty": "catalog:",
     "uuid": "catalog:",
     "isomorphic-ws": "^5.0.0"
   },

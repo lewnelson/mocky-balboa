@@ -30,8 +30,6 @@
     "@playwright/test": "^1.54.2",
     "@primevue/nuxt-module": "^4.3.7",
     "cypress": "^15.0.0",
-    "pino": "catalog:",
-    "pino-pretty": "catalog:",
     "playwright": "^1.54.2"
   }
 }

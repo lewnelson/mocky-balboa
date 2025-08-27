@@ -137,7 +137,10 @@ const getResponseFromClient = async (
             break;
         }
       } catch (error) {
-        logger.error({ error }, "Error occurred while processing message");
+        logger.error("Error occurred while processing message", error, {
+          clientIdentity: connectionState.clientIdentity,
+          requestId,
+        });
       }
     }
 
@@ -175,14 +178,21 @@ export const bindMockServiceWorker = ({
   const server = setupServer(
     http.all("*", async (req) => {
       const clientIdentity = clientIdentityStorage.getStore();
+      const requestLogContext = {
+        url: req.request.url,
+        headers: Object.fromEntries(req.request.headers),
+      };
       if (!clientIdentity || clientIdentity === UnsetClientIdentity) {
-        logger.info({ req: req.request }, "Not identified");
+        logger.info("Client not identified", requestLogContext);
         return passthrough();
       }
 
       const connectionState = connections.get(clientIdentity);
       if (!connectionState) {
-        logger.warn({ req: req.request }, "Client connection not found");
+        logger.warn("Client connection not found", {
+          ...requestLogContext,
+          clientIdentity,
+        });
         return passthrough();
       }
 
@@ -195,10 +205,9 @@ export const bindMockServiceWorker = ({
         );
         return response;
       } catch (error) {
-        console.log("error retrieving response from client");
         logger.error(
-          { error },
           "Error occurred while attempting to resolve response",
+          error,
         );
 
         const errorMessage = new Message(MessageType.ERROR, {
