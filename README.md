@@ -16,7 +16,6 @@ Check out the [documentation](https://docs.mockybalboa.com) to get started.
 | [Next.js](https://nextjs.org/) | v15.x.x | Supported |
 | [Nuxt](https://nuxt.com/) | v3.x.x | Supported |
 | [Nuxt](https://nuxt.com/) | v4.x.x | Supported |
-| [Remix](https://remix.run/) | v2.x.x | Planned |
 | [Astro](https://astro.build/) | v5.x.x | Planned |
 | [SvelteKit](https://svelte.dev/docs/kit/introduction) | v2.x.x | Planned |
 

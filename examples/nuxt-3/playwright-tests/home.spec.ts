@@ -6,7 +6,7 @@ import {
   FightStatus,
   TrainingIntensity,
   type TrainingRegime,
-} from "@/lib/data";
+} from "../lib/data";
 
 const nextFightEndpoint = "http://localhost:58157/api/next-fight";
 const trainingRegimeEndpoint = "http://localhost:58157/api/training-regime";
