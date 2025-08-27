@@ -8,11 +8,12 @@ import {
   startServer,
   UnsetClientIdentity,
 } from "@mocky-balboa/server";
-import { logger } from "./logger.js";
 import type { EventHandler } from "h3";
 
 /**
  * Starts the Mocky Balboa server. Should only be called once at runtime.
+ *
+ * @function startServerPlugin
  */
 export default <NitroAppPlugin>async function (app) {
   const config: NitroRuntimeConfig = useRuntimeConfig();

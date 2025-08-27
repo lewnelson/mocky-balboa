@@ -1,4 +1,5 @@
 import { logger } from "./logger.js";
+import { Client } from "./client.js";
 
 /** Options when fetching a route using [fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) */
 export interface FetchOptions {
@@ -136,7 +137,7 @@ export type RouteResponse =
   | FulfillRouteResponse;
 
 /**
- * Route passed as an argument to the handler callback on Client.route
+ * Route passed as an argument to the handler callback on {@link Client.route}
  */
 export class Route {
   /** Request body string. The body is a stream, which once consumed is no longer available */
@@ -268,7 +269,7 @@ export class Route {
   }
 
   /**
-   * Utility method to help with modifying responses, intended to be used in conjunction with {@link Client.fetch} for modifying responses before sending them back to the server
+   * Utility method to help with modifying responses, intended to be used in conjunction with {@link Route.fetch} for modifying responses before sending them back to the server
    *
    * @param response - The response to modify.
    * @param options - Options for the modification.

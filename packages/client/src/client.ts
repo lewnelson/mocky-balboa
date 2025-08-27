@@ -18,7 +18,7 @@ import { logger } from "./logger.js";
 export const DefaultWebSocketServerTimeout = 5000;
 
 /** Default timeout duration in milliseconds for waiting on a request to be sent */
-const DefaultWaitForRequestTimeout = 5000;
+export const DefaultWaitForRequestTimeout = 5000;
 
 /** Possible values for URL pattern matching */
 export type UrlMatcher =

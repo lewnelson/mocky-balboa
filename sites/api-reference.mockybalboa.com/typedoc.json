@@ -1,7 +1,12 @@
 {
+  "$schema": "https://typedoc.org/schema.json",
   "entryPoints": ["../../packages/*"],
-  "name": "Mocky Balboa",
-  "readme": "./README.md",
+  "name": "Mocky Balboa API Reference",
+  "readme": "./API_REFERENCE.md",
   "entryPointStrategy": "packages",
-  "includeVersion": false
+  "includeVersion": false,
+  "navigationLinks": {
+    "GitHub": "https://github.com/mockybalboa/mockybalboa",
+    "Documentation": "https://docs.mockybalboa.com"
+  }
 }

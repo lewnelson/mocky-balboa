@@ -3,8 +3,7 @@ import path from "node:path";
 import { Command } from "commander";
 import { DefaultWebSocketServerPort } from "@mocky-balboa/shared-config";
 import express from "express";
-import { startServer } from "@mocky-balboa/server";
-import { mockyBalboaMiddleware } from "@mocky-balboa/express";
+import { mockyBalboaMiddleware, startServer } from "@mocky-balboa/express";
 import { logger } from "./logger.js";
 
 const cli = new Command();

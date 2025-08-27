@@ -20,3 +20,5 @@ export const mockyBalboaMiddleware = () => {
     });
   };
 };
+
+export { startServer } from "@mocky-balboa/server";

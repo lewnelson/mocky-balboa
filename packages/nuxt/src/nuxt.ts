@@ -34,6 +34,9 @@ const module: any = defineNuxtModule<MockyBalboaModuleOptions>({
   },
 });
 
+/**
+ * @module module
+ */
 export default module as NuxtModule<
   MockyBalboaModuleOptions,
   MockyBalboaModuleOptions,

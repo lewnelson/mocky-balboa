@@ -1,6 +1,6 @@
 import chalk from "chalk";
 
-type LoggerContext = Record<string, unknown>;
+export type LoggerContext = Record<string, unknown>;
 
 export class Logger {
   constructor(private readonly packageName: string) {}

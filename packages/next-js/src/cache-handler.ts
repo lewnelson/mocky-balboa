@@ -2,6 +2,8 @@ type Data = unknown;
 
 /**
  * A no-op cache handler for Next.js to disable the persistent Next.js cache. For more deterministic behaviour in your test suites
+ *
+ * @class CacheHandler
  */
 export default class CacheHandler {
   async get(_key: string) {

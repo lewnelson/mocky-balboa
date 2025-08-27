@@ -8,7 +8,7 @@ There are two components to Mocky Balboa. The first is the __server integration_
 
 There is first-class support for popular frameworks and tools, but you can also write your own integrations.
 
-1. **Server:** The integration with your SSR framework
+1. **Server:** The integration with your server framework
 2. **Client:** The integration with your browser automation framework
 
 Check out the guides below to get started in your framework.
@@ -19,8 +19,10 @@ Check out the guides below to get started in your framework.
 - [Cypress](./client/cypress)
 - [Custom integration](./client/custom)
 
-### SSR Framework integrations
+### Server framework integrations
 
+- [Astro](./server/astro)
+- [Express](./server/express)
 - [Next.js](./server/next-js)
 - [Nuxt](./server/nuxt)
 - [Custom integration](./server/custom)

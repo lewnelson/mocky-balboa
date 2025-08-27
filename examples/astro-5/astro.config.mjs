@@ -9,7 +9,7 @@ const mockyBalboaModuleEnabled = process.env.ENABLE_MOCKY_BALBOA === "true";
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: mockyBalboaModuleEnabled ? [mockyBalboa()] : [],
+  integrations: [mockyBalboa({ enabled: mockyBalboaModuleEnabled })],
 
   adapter: node({
     mode: "middleware",

@@ -10,7 +10,7 @@
     "astro": "astro",
     "test:cypress": "pnpm cypress run",
     "test:playwright": "pnpm playwright test",
-    "start:tests": "ENABLE_MOCKY_BALBOA=true mocky-balboa-astro",
+    "start:tests": "mocky-balboa-astro",
     "start:tests-dev": "ENABLE_MOCKY_BALBOA=true pnpm dev --port 3000 --host 0.0.0.0"
   },
   "dependencies": {
