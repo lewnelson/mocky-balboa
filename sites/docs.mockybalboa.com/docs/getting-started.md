@@ -23,6 +23,8 @@ Check out the guides below to get started in your framework.
 
 - [Astro](./server/astro)
 - [Express](./server/express)
+- [Fastify](./server/fastify)
+- [Koa](./server/koa)
 - [Next.js](./server/next-js)
 - [Nuxt](./server/nuxt)
 - [Custom integration](./server/custom)

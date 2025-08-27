@@ -1,17 +1,17 @@
 ---
-sidebar_position: 7
-title: Express
+sidebar_position: 9
+title: Koa
 ---
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Mocky Balboa and Express
+# Mocky Balboa and Koa
 
-How to use Mocky Balboa with your [Express](https://expressjs.com/) server.
+How to use Mocky Balboa with your [Koa](https://koajs.com/) server.
 
 :::info[Supported versions]
 
-__≥ 4.x.x__
+__≥ 2.x.x__
 
 :::
 
@@ -40,11 +40,11 @@ __≥ 4.x.x__
 <Tabs groupId="javascript-language">
   <TabItem value="typescript" label="TypeScript" default>
         ```TypeScript
-        import express from "express";
+        import Koa from "koa";
         import { mockyBalboaMiddleware, startServer } from "@mocky-balboa/server";
 
         void (async () => {
-          const app = express();
+          const app = new Koa();
 
           // Register the Mocky Balboa middleware
           app.use(mockyBalboaMiddleware());
@@ -62,11 +62,11 @@ __≥ 4.x.x__
   </TabItem>
   <TabItem value="javascript" label="JavaScript">
       ```JavaScript
-      import express from "express";
+      import Koa from "koa";
       import { mockyBalboaMiddleware, startServer } from "@mocky-balboa/server";
 
       (async () => {
-        const app = express();
+        const app = new Koa();
 
         // Register the Mocky Balboa middleware
         app.use(mockyBalboaMiddleware());

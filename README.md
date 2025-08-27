@@ -8,11 +8,12 @@ Check out the [documentation](https://docs.mockybalboa.com) to get started.
 
 ## Server integrations
 
-- [Astro](https://astro.build/)
-- [Express](https://expressjs.com/)
-- [Next.js](https://nextjs.org/)
-- [Nuxt](https://nuxt.com/)
-- [SvelteKit](https://svelte.dev/docs/kit/introduction)
+- [Astro](https://docs.mockybalboa.com/docs/server/astro)
+- [Express](https://docs.mockybalboa.com/docs/server/express)
+- [Fastify](https://docs.mockybalboa.com/docs/server/fastify)
+- [Koa](https://docs.mockybalboa.com/docs/server/koa)
+- [Next.js](https://docs.mockybalboa.com/docs/server/next-js)
+- [Nuxt](https://docs.mockybalboa.com/docs/server/nuxt)
 
 ## Browser automation tool support
 

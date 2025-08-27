@@ -1,17 +1,17 @@
 ---
-sidebar_position: 7
-title: Express
+sidebar_position: 8
+title: Fastify
 ---
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Mocky Balboa and Express
+# Mocky Balboa and Fastify
 
-How to use Mocky Balboa with your [Express](https://expressjs.com/) server.
+How to use Mocky Balboa with your [Fastify](https://fastify.io/) server.
 
 :::info[Supported versions]
 
-__≥ 4.x.x__
+__≥ 3.x.x__
 
 :::
 
@@ -40,11 +40,14 @@ __≥ 4.x.x__
 <Tabs groupId="javascript-language">
   <TabItem value="typescript" label="TypeScript" default>
         ```TypeScript
-        import express from "express";
+        import Fastify from "fastify";
+        import fastifyExpress from "@fastify/express";
         import { mockyBalboaMiddleware, startServer } from "@mocky-balboa/server";
 
         void (async () => {
-          const app = express();
+          const app = Fastify();
+
+          await fastify.register(fastifyExpress);
 
           // Register the Mocky Balboa middleware
           app.use(mockyBalboaMiddleware());
@@ -56,17 +59,20 @@ __≥ 4.x.x__
 
           // Your app goes here
 
-          app.listen(3000);
+          app.listen({ port: 3000 });
         })();
         ```
   </TabItem>
   <TabItem value="javascript" label="JavaScript">
       ```JavaScript
-      import express from "express";
+      import Fastify from "fastify";
+      import fastifyExpress from "@fastify/express";
       import { mockyBalboaMiddleware, startServer } from "@mocky-balboa/server";
 
       (async () => {
-        const app = express();
+        const app = Fastify();
+
+        await fastify.register(fastifyExpress);
 
         // Register the Mocky Balboa middleware
         app.use(mockyBalboaMiddleware());
@@ -78,8 +84,32 @@ __≥ 4.x.x__
 
         // Your app goes here
 
-        app.listen(3000);
+        app.listen({ port: 3000 });
       })();
       ```
   </TabItem>
 </Tabs>
+
+```TypeScript
+import Fastify from "fastify";
+import fastifyExpress from "@fastify/express";
+import { mockyBalboaMiddleware, startServer } from "@mocky-balboa/server";
+
+(async () => {
+  const app = Fastify();
+
+  await fastify.register(fastifyExpress);
+
+  // Register the Mocky Balboa middleware
+  app.use(mockyBalboaMiddleware());
+
+  // Start the Mocky Balboa server.
+  // Pass optional server options here:
+  // https://api-reference.mockybalboa.com/functions/_mocky-balboa_server.startServer
+  await startServer();
+
+  // Your app goes here
+
+  app.listen({ port: 3000 });
+})();
+```
