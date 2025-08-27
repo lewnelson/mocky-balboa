@@ -3,13 +3,35 @@ import {
   ClientIdentityStorageHeader,
   UnsetClientIdentity,
 } from "@mocky-balboa/server";
-import { type NextFunction, type Request, type Response } from "express";
 import { logger } from "./logger.js";
 
+/**
+ * Request like object compatible with Express v4 and v5
+ */
+export interface Request {
+  headers:
+    | Record<string, string | string[]>
+    | NodeJS.Dict<string | string[]>
+    | Headers;
+}
+
+/**
+ * Middleware next function
+ */
+export type NextFunction = () => void | Promise<void>;
+
+/**
+ * Express middleware for Mocky Balboa compatible with other frameworks following
+ * the express middleware pattern.
+ */
 export const mockyBalboaMiddleware = () => {
   logger.info("Initializing middleware");
-  return (req: Request, _res: Response, next: NextFunction) => {
-    let clientIdentity = req.headers[ClientIdentityStorageHeader];
+  return (req: Request, _res: any, next: NextFunction) => {
+    let clientIdentity =
+      req.headers instanceof Headers
+        ? req.headers.get(ClientIdentityStorageHeader)
+        : req.headers[ClientIdentityStorageHeader];
+
     if (typeof clientIdentity !== "string") {
       clientIdentity = UnsetClientIdentity;
     }
