@@ -20,17 +20,17 @@ __≥ 4.x.x__
 <Tabs groupId="package-manager">
   <TabItem value="pnpm" label="pnpm" default>
       ```bash
-      pnpm add -D @mocky-balboa/express
+      pnpm add -D @mocky-balboa/server
       ```
     </TabItem>
   <TabItem value="npm" label="npm">
     ```bash
-    npm install -D @mocky-balboa/express
+    npm install -D @mocky-balboa/server
     ```
   </TabItem>
   <TabItem value="yarn" label="yarn">
     ```bash
-    yarn add -D @mocky-balboa/express
+    yarn add -D @mocky-balboa/server
     ```
   </TabItem>
 </Tabs>
@@ -41,7 +41,7 @@ __≥ 4.x.x__
   <TabItem value="typescript" label="TypeScript" default>
         ```TypeScript
         import express from "express";
-        import { mockyBalboaMiddleware, startServer } from "@mocky-balboa/express";
+        import { mockyBalboaMiddleware, startServer } from "@mocky-balboa/server";
 
         void (async () => {
           const app = express();
@@ -63,7 +63,7 @@ __≥ 4.x.x__
   <TabItem value="javascript" label="JavaScript">
       ```JavaScript
       import express from "express";
-      import { mockyBalboaMiddleware, startServer } from "@mocky-balboa/express";
+      import { mockyBalboaMiddleware, startServer } from "@mocky-balboa/server";
 
       void (async () => {
         const app = express();

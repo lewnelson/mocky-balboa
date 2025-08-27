@@ -1,9 +1,9 @@
 import {
-  clientIdentityStorage,
   ClientIdentityStorageHeader,
   UnsetClientIdentity,
-} from "@mocky-balboa/server";
+} from "@mocky-balboa/shared-config";
 import { logger } from "./logger.js";
+import { clientIdentityStorage } from "./trace.js";
 
 /**
  * Request like object compatible with Express v4 and v5
@@ -24,8 +24,8 @@ export type NextFunction = () => void | Promise<void>;
  * Express middleware for Mocky Balboa compatible with other frameworks following
  * the express middleware pattern.
  */
-export const mockyBalboaMiddleware = () => {
-  logger.info("Initializing middleware");
+const mockyBalboaMiddleware = () => {
+  logger.info("Initializing server middleware");
   return (req: Request, _res: any, next: NextFunction) => {
     let clientIdentity =
       req.headers instanceof Headers
@@ -43,4 +43,4 @@ export const mockyBalboaMiddleware = () => {
   };
 };
 
-export { startServer } from "@mocky-balboa/server";
+export default mockyBalboaMiddleware;

@@ -42,3 +42,5 @@ export {
 } from "@mocky-balboa/shared-config";
 export type { WebSocketServerOptions } from "./websocket-server.js";
 export type { MockServerOptions } from "./mock-server.js";
+export type { Request, NextFunction } from "./middleware.js";
+export { default as mockyBalboaMiddleware } from "./middleware.js";

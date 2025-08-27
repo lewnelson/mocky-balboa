@@ -39,6 +39,16 @@
         "default": "./dist/cjs/server.cjs",
         "types": "./dist/cjs/server.d.ts"
       }
+    },
+    "./middleware": {
+      "import": {
+        "default": "./dist/esm/middleware.js",
+        "types": "./dist/esm/middleware.d.ts"
+      },
+      "require": {
+        "default": "./dist/cjs/middleware.cjs",
+        "types": "./dist/cjs/middleware.d.ts"
+      }
     }
   },
   "scripts": {
