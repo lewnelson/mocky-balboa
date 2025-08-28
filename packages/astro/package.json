@@ -76,7 +76,7 @@
     "express": "catalog:"
   },
   "peerDependencies": {
-    "astro": ">=3.5.0"
+    "astro": ">=4.0.0"
   },
   "devDependencies": {
     "@swc/cli": "catalog:",

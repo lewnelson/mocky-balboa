@@ -1,5 +1,5 @@
 {
-  "name": "@mocky-balboa/example-astro-5",
+  "name": "@mocky-balboa/example-astro-4",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
@@ -14,9 +14,9 @@
     "start:tests-dev": "ENABLE_MOCKY_BALBOA=true pnpm dev --port 3000 --host 0.0.0.0"
   },
   "dependencies": {
-    "@astrojs/node": "^9.4.3",
+    "@astrojs/node": "^8",
     "@tailwindcss/vite": "^4.1.12",
-    "astro": "^5.13.3",
+    "astro": "^4",
     "tailwindcss": "^4.1.12"
   },
   "devDependencies": {
